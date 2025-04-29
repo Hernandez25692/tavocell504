@@ -46,6 +46,16 @@ class ReparacionController extends Controller
         if ($request->filled('hasta')) {
             $query->whereDate('fecha_ingreso', '<=', $request->hasta);
         }
+        if ($request->filled('codigo')) {
+            $codigo = $request->codigo;
+            if (Str::startsWith($codigo, 'REP-')) {
+                $idBuscado = (int) Str::after($codigo, 'REP-');
+                $query->where('id', $idBuscado);
+            } else {
+                $query->where('id', -1); // No coincide, resultado vacío
+            }
+        }
+
 
         // APLICAR PAGINACIÓN CORRECTAMENTE
         $reparaciones = $query->orderByDesc('fecha_ingreso')->paginate(10);

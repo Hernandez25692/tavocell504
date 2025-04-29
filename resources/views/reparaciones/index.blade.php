@@ -44,11 +44,23 @@
                             </svg>
                         </div>
                     </div>
+                    <div class="relative">
+                        <input type="text" name="codigo" value="{{ request('codigo') }}"
+                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm"
+                            placeholder="Buscar por código (REP-00045)">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+
 
                     <select name="estado"
                         class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-right-3 bg-center">
                         <option value="">Todos los estados</option>
-                        <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente
+                        <option value="recibido" {{ request('estado') == 'recibido' ? 'selected' : '' }}>Recibido
                         </option>
                         <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En proceso
                         </option>
@@ -56,7 +68,7 @@
                         <option value="entregado" {{ request('estado') == 'entregado' ? 'selected' : '' }}>Entregado
                         </option>
                     </select>
-
+                    <br>
                     <div class="relative">
                         <input type="date" name="desde" value="{{ request('desde') }}"
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm">
@@ -115,6 +127,11 @@
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                                    Código
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                                     Cliente
                                 </th>
                                 <th scope="col"
@@ -149,6 +166,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ $reparaciones->firstItem() + $index }}
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 font-semibold">
+                                        REP-{{ str_pad($rep->id, 5, '0', STR_PAD_LEFT) }}
+                                    </td>
+
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                                         {{ $rep->cliente->nombre }}
                                     </td>

@@ -22,10 +22,13 @@ class Reparacion extends Model
         'tecnico_id',
         'fecha_ingreso',
         'costo_total',
+        'costo_tavocell',   
+        'ganancia',         
         'abono',
         'estado',
         'factura_id',
     ];
+
 
 
     public function cliente()

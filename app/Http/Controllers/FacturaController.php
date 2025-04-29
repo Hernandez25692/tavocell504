@@ -64,16 +64,18 @@ class FacturaController extends Controller
                     throw new \Exception("Stock insuficiente para el producto: {$producto->nombre}");
                 }
 
-                $precio = $producto->precio_venta;
+                $precioVenta = $producto->precio_venta;
+                $precioCompra = $producto->precio_compra; // <-- Tomar precio de compra actual en el momento de la venta
                 $cantidad = $item['cantidad'];
-                $subtotalProducto = $precio * $cantidad;
+                $subtotalProducto = $precioVenta * $cantidad;
 
                 $producto->decrement('stock', $cantidad);
 
                 $detalles[] = [
                     'producto_id' => $producto->id,
                     'cantidad' => $cantidad,
-                    'precio_unitario' => $precio,
+                    'precio_unitario' => $precioVenta,
+                    'precio_compra_unitario' => $precioCompra, // <-- Lo guardamos aquí
                     'subtotal' => $subtotalProducto,
                 ];
 

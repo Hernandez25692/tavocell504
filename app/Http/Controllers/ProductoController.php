@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use App\Models\HistorialPrecioProducto;
 
 class ProductoController extends Controller
 {
@@ -30,10 +31,17 @@ class ProductoController extends Controller
             'proveedor' => 'nullable|string',
         ]);
 
-        Producto::create($request->all());
+        $producto = Producto::create($request->all()); // ✅ Aquí se guarda en $producto
+
+        HistorialPrecioProducto::create([
+            'producto_id' => $producto->id,
+            'precio_compra' => $producto->precio_compra,
+            'precio_venta' => $producto->precio_venta,
+        ]);
 
         return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
     }
+
 
     public function edit(Producto $producto)
     {

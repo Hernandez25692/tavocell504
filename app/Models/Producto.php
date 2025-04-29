@@ -26,8 +26,11 @@ class Producto extends Model
         'imagen'
     ];
     public function detallesFactura()
-{
-    return $this->hasMany(DetalleFactura::class);
-}
-
+    {
+        return $this->hasMany(DetalleFactura::class);
+    }
+    public function historialPrecios()
+    {
+        return $this->hasMany(HistorialPrecioProducto::class);
+    }
 }

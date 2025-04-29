@@ -10,22 +10,21 @@ class DetalleFactura extends Model
     use HasFactory;
 
     protected $fillable = [
-        'factura_id',
         'producto_id',
         'cantidad',
         'precio_unitario',
+        'precio_compra_unitario',
         'subtotal',
-        'descripcion', // NUEVO
+        'descripcion',
     ];
-
-
-    public function factura()
-    {
-        return $this->belongsTo(Factura::class);
-    }
 
     public function producto()
     {
-        return $this->belongsTo(Producto::class);
+        return $this->belongsTo(\App\Models\Producto::class);
+    }
+
+    public function factura()
+    {
+        return $this->belongsTo(\App\Models\Factura::class);
     }
 }

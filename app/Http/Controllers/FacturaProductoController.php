@@ -61,10 +61,18 @@ class FacturaProductoController extends Controller
                     'producto_id' => $producto->id,
                     'cantidad' => $item['cantidad'],
                     'precio_unitario' => $producto->precio_venta,
+                    'precio_compra_unitario' => $producto->precio_compra, // <<<<<< AQUI SE AGREGA
                     'subtotal' => $subtotalProducto,
                 ];
 
                 $subtotal += $subtotalProducto;
+
+                // Registrar también en histórico (por si quieres tenerlo archivado)
+                DB::table('historial_precio_productos')->insert([
+                    'producto_id' => $producto->id,
+                    'precio_compra' => $producto->precio_compra,
+                    'fecha_registro' => now(),
+                ]);
             }
 
             $factura = Factura::create([

@@ -84,8 +84,13 @@ class ReparacionController extends Controller
             'tecnico_id' => 'required|exists:users,id',
             'fecha_ingreso' => 'required|date',
             'costo_total' => 'required|numeric|min:0',
+            'costo_tavocell' => 'nullable|numeric|min:0',
             'abono' => 'nullable|numeric|min:0|max:' . $request->input('costo_total'),
         ]);
+
+        $costo_total = $request->costo_total;
+        $costo_tavocell = $request->costo_tavocell ?? 0;
+        $ganancia = $costo_total - $costo_tavocell;
 
         $reparacion = Reparacion::create([
             'cliente_id' => $request->cliente_id,
@@ -96,7 +101,9 @@ class ReparacionController extends Controller
             'accesorios' => $request->accesorios,
             'tecnico_id' => $request->tecnico_id,
             'fecha_ingreso' => $request->fecha_ingreso,
-            'costo_total' => $request->costo_total,
+            'costo_total' => $costo_total,
+            'costo_tavocell' => $costo_tavocell,
+            'ganancia' => $ganancia,
             'abono' => $request->abono ?? 0,
             'estado' => 'recibido',
         ]);
@@ -110,6 +117,7 @@ class ReparacionController extends Controller
             ]);
         }
 
+        // Generar código QR como ya lo haces...
         $qr = new \Milon\Barcode\DNS2D();
         $qr->setStorPath(storage_path('framework/qr'));
         $url = route('consulta.reparacion.publica', ['id' => $reparacion->id]);
@@ -131,13 +139,14 @@ class ReparacionController extends Controller
         ]);
 
         $pdfName = "comprobante_reparacion_{$reparacion->id}.pdf";
-        Storage::disk('public')->put("comprobantes/{$pdfName}", $pdf->output());
+        \Storage::disk('public')->put("comprobantes/{$pdfName}", $pdf->output());
 
         return redirect()->route('reparaciones.index')
             ->with('success', 'Reparación registrada correctamente.')
             ->with('comprobante', $pdfName)
             ->with('comprobante_id', $reparacion->id);
     }
+
 
 
 

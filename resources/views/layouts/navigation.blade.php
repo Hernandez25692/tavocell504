@@ -42,6 +42,12 @@
                             </div>
                         @endif
                     @endif
+                    @if (Auth::user()->hasRole('admin'))
+                        <x-nav-link :href="route('utilidades.index')" :active="request()->routeIs('utilidades.index')" class="nav-item">
+                            <span class="nav-icon">📈</span>
+                            <span>Utilidades</span>
+                        </x-nav-link>
+                    @endif
 
                     @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('cajero'))
                         <!-- Facturación -->
@@ -199,6 +205,11 @@
                     </div>
 
                 </div>
+            @endrole
+            @role('admin')
+                <x-responsive-nav-link :href="route('utilidades.index')" :active="request()->routeIs('utilidades.index')" class="mobile-nav-item">
+                    <span class="nav-icon">📈</span> Utilidades
+                </x-responsive-nav-link>
             @endrole
 
             @role('admin|cajero')

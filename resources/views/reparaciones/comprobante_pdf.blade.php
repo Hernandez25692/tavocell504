@@ -177,31 +177,71 @@
         <div class="highlight">
             <div class="highlight-title">INFORMACIÓN DEL CLIENTE</div>
             <table class="info-table">
-                <tr><td class="label">Código de Reparación:</td><td>#{{ $reparacion->id }}</td></tr>
-                <tr><td class="label">Cliente:</td><td>{{ $reparacion->cliente->nombre }}</td></tr>
-                <tr><td class="label">Teléfono:</td><td>{{ $reparacion->cliente->telefono ?? 'No especificado' }}</td></tr>
-                <tr><td class="label">Correo:</td><td>{{ $reparacion->cliente->correo ?? 'No especificado' }}</td></tr>
+                <tr>
+                    <td class="label">Código de Reparación:</td>
+                    <td>REP-{{ str_pad($reparacion->id, 5, '0', STR_PAD_LEFT) }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Cliente:</td>
+                    <td>{{ $reparacion->cliente->nombre }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Teléfono:</td>
+                    <td>{{ $reparacion->cliente->telefono ?? 'No especificado' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Correo:</td>
+                    <td>{{ $reparacion->cliente->correo ?? 'No especificado' }}</td>
+                </tr>
             </table>
         </div>
 
         <div class="highlight">
             <div class="highlight-title">INFORMACIÓN DEL DISPOSITIVO</div>
             <table class="info-table">
-                <tr><td class="label">Marca / Modelo:</td><td>{{ $reparacion->marca }} / {{ $reparacion->modelo }}</td></tr>
-                <tr><td class="label">IMEI/Serial:</td><td>{{ $reparacion->imei ?? 'No registrado' }}</td></tr>
-                <tr><td class="label">Falla Reportada:</td><td>{{ $reparacion->falla_reportada }}</td></tr>
-                <tr><td class="label">Accesorios:</td><td>{{ $reparacion->accesorios ?? 'No especificado' }}</td></tr>
+                <tr>
+                    <td class="label">Marca / Modelo:</td>
+                    <td>{{ $reparacion->marca }} / {{ $reparacion->modelo }}</td>
+                </tr>
+                <tr>
+                    <td class="label">IMEI/Serial:</td>
+                    <td>{{ $reparacion->imei ?? 'No registrado' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Falla Reportada:</td>
+                    <td>{{ $reparacion->falla_reportada }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Accesorios:</td>
+                    <td>{{ $reparacion->accesorios ?? 'No especificado' }}</td>
+                </tr>
             </table>
         </div>
 
         <div class="highlight">
             <div class="highlight-title">DETALLES FINANCIEROS</div>
             <table class="info-table">
-                <tr><td class="label">Fecha de Ingreso:</td><td>{{ $reparacion->fecha_ingreso }}</td></tr>
-                <tr><td class="label">Fecha Estimada Entrega:</td><td>{{ $reparacion->fecha_entrega_estimada ?? 'Por confirmar' }}</td></tr>
-                <tr><td class="label">Costo Estimado:</td><td>L. {{ number_format($reparacion->costo_total, 2) }}</td></tr>
-                <tr><td class="label">Abono:</td><td>L. {{ number_format($reparacion->abono, 2) }}</td></tr>
-                <tr><td class="label">Saldo Pendiente:</td><td>L. {{ number_format($reparacion->costo_total - $reparacion->abono, 2) }}</td></tr>
+                <tr>
+                    <td class="label">Fecha de Ingreso:</td>
+                    <td>{{ $reparacion->fecha_ingreso }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Fecha Estimada Entrega:</td>
+                    <td>{{ $reparacion->fecha_entrega_estimada ?? 'Por confirmar' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Costo Estimado:</td>
+                    <td>L. {{ number_format($reparacion->costo_total, 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Abono:</td>
+                    <td>L. {{ number_format($reparacion->abono, 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Saldo Pendiente:</td>
+                    <td>L. {{ number_format($reparacion->costo_total - $reparacion->abono, 2) }}</td>
+                </tr>
             </table>
         </div>
 
@@ -219,7 +259,11 @@
         </div>
 
         <div class="terms">
-            <p><strong>TÉRMINOS Y CONDICIONES:</strong> TavoCell 504 no se hace responsable por daños o pérdida de datos durante el proceso de reparación. Se recomienda realizar copia de seguridad antes de entregar el dispositivo. El cliente tiene 30 días para reclamar después de la fecha de entrega. Pasado este tiempo, el dispositivo no reclamado será considerado abandonado según nuestra política. Garantía de 30 días en repuestos y mano de obra, excepto en casos de daño físico o mal uso.</p>
+            <p><strong>TÉRMINOS Y CONDICIONES:</strong> TavoCell 504 no se hace responsable por daños o pérdida de datos
+                durante el proceso de reparación. Se recomienda realizar copia de seguridad antes de entregar el
+                dispositivo. El cliente tiene 30 días para reclamar después de la fecha de entrega. Pasado este tiempo,
+                el dispositivo no reclamado será considerado abandonado según nuestra política. Garantía de 30 días en
+                repuestos y mano de obra, excepto en casos de daño físico o mal uso.</p>
             <p style="text-align: center; margin-top: 6px;">¡Gracias por confiar en <strong>TavoCell 504</strong>!</p>
         </div>
     </div>

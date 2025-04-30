@@ -48,6 +48,12 @@
                             <span>Utilidades</span>
                         </x-nav-link>
                     @endif
+                    @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('cajero'))
+                        <x-nav-link :href="route('salidas-caja.index')" :active="request()->routeIs('salidas-caja.*')" class="nav-item">
+                            <span class="nav-icon">💵</span>
+                            <span>Salidas/Caja</span>
+                        </x-nav-link>
+                    @endif
 
                     @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('cajero'))
                         <!-- Facturación -->
@@ -209,6 +215,11 @@
             @role('admin')
                 <x-responsive-nav-link :href="route('utilidades.index')" :active="request()->routeIs('utilidades.index')" class="mobile-nav-item">
                     <span class="nav-icon">📈</span> Utilidades
+                </x-responsive-nav-link>
+            @endrole
+            @role('admin|cajero')
+                <x-responsive-nav-link :href="route('salidas-caja.index')" :active="request()->routeIs('salidas-caja.*')" class="mobile-nav-item">
+                    <span class="nav-icon">💵</span>Salidas/Caja
                 </x-responsive-nav-link>
             @endrole
 

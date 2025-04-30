@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         //control de ganacias
         Route::get('/utilidades', [App\Http\Controllers\UtilidadController::class, 'index'])->name('utilidades.index');
 
+        Route::resource('salidas-caja', \App\Http\Controllers\SalidaCajaController::class);
     });
 
     // ============================
@@ -95,6 +96,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Suscripciones Netflix
         Route::resource('suscripciones-netflix', App\Http\Controllers\SuscripcionNetflixController::class);
+
+        Route::resource('salidas-caja', \App\Http\Controllers\SalidaCajaController::class);
     });
 
     // ============================

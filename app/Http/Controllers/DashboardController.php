@@ -8,16 +8,17 @@ use App\Models\Reparacion;
 use App\Models\SuscripcionNetflix;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\SalidaCaja;
 
 class DashboardController extends Controller
 {
     public function mostrar()
     {
         $hoy = Carbon::today();
-
+        $salidasCajaHoy = SalidaCaja::whereDate('created_at', $hoy)->sum('monto');
         $ingresosProductos = Factura::whereDate('created_at', $hoy)->sum('total');
         $ingresosReparaciones = Reparacion::whereDate('created_at', $hoy)->sum('abono');
-        $ingresosTotales = $ingresosProductos + $ingresosReparaciones;
+        $ingresosTotales = $ingresosProductos + $ingresosReparaciones - $salidasCajaHoy;
 
         $totalFacturasHoy = Factura::whereDate('created_at', $hoy)->count();
         $reparacionesActivas = Reparacion::where('estado', '!=', 'Finalizado')->count();
@@ -35,6 +36,7 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'ingresosTotales',
+            'salidasCajaHoy',
             'totalFacturasHoy',
             'reparacionesActivas',
             'ingresosPorDia',

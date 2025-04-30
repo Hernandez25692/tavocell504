@@ -92,6 +92,31 @@
                         En proceso
                     </div>
                 </div>
+                <!-- Salidas de Caja del Día -->
+                <div
+                    class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Salidas de Caja</p>
+                            <p class="text-2xl font-bold text-gray-800 mt-1">L. {{ number_format($salidasCajaHoy, 2) }}</p>
+                        </div>
+                        <div class="bg-red-100 text-red-600 p-3 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405M9 17H4l1.405-1.405M6 6h12l-1 1m-2 3h-4a1 1 0 010-2h4a1 1 0 010 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-xs text-red-600 font-medium flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M6.938 4h10.124c1.54 0 2.502 1.667 1.732 3L13.732 20c-.77 1.333-2.694 1.333-3.464 0L3.34 7c-.77-1.333.192-3 1.732-3z" />
+                        </svg>
+                        Hoy
+                    </div>
+                </div>
 
 
             </div>

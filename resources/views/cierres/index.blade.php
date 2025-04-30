@@ -11,7 +11,7 @@
                         <span class="text-indigo-600">📅</span> Cierres Diarios
                     </h1>
                 </div>
-                
+
                 <!-- Botón de acción principal -->
                 <form method="POST" action="{{ route('cierres.store') }}" class="w-full md:w-auto">
                     @csrf
@@ -55,37 +55,53 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Fecha
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Facturas
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Reparaciones
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Ventas
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Reparaciones
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Abonos
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    Salidas
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Total Sistema
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Efectivo Físico
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Diferencia
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Responsable
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                <th scope="col"
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Acciones
                                 </th>
                             </tr>
@@ -111,6 +127,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         L. {{ number_format($cierre->total_abonos, 2) }}
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                                        L. {{ number_format($cierre->total_salidas, 2) }}
+                                    </td>
+
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
                                         L. {{ number_format($cierre->total_efectivo, 2) }}
                                     </td>
@@ -121,17 +141,23 @@
                                                 Ingresar Efectivo
                                             </button>
                                         @else
-                                            <span class="font-semibold text-green-600">L. {{ number_format($cierre->efectivo_fisico, 2) }}</span>
+                                            <span class="font-semibold text-green-600">L.
+                                                {{ number_format($cierre->efectivo_fisico, 2) }}</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         @if (!is_null($cierre->efectivo_fisico))
                                             @php
                                                 $diferencia = $cierre->efectivo_fisico - $cierre->total_efectivo;
-                                                $diferenciaClase = $diferencia === 0 ? 'bg-green-100 text-green-800' : 
-                                                                ($diferencia > 0 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800');
+                                                $diferenciaClase =
+                                                    $diferencia === 0
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : ($diferencia > 0
+                                                            ? 'bg-blue-100 text-blue-800'
+                                                            : 'bg-red-100 text-red-800');
                                             @endphp
-                                            <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $diferenciaClase }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs font-semibold {{ $diferenciaClase }}">
                                                 L. {{ number_format(abs($diferencia), 2) }}
                                             </span>
                                         @else
@@ -148,8 +174,11 @@
                                                 @csrf
                                                 <button type="submit"
                                                     class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
-                                                    <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                                     </svg>
                                                     Reporte Z
                                                 </button>
@@ -166,27 +195,31 @@
             </div>
 
             <!-- Modal para ingresar efectivo -->
-            <div id="modalEfectivo" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div id="modalEfectivo"
+                class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
                 <div class="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all">
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold text-gray-900">Registrar Efectivo Contado</h3>
                             <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-500">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
-                        
+
                         <form id="formEfectivo" method="POST">
                             @csrf
                             <div class="mb-4">
-                                <label for="efectivo_fisico" class="block text-sm font-medium text-gray-700 mb-1">Monto en efectivo (L.)</label>
-                                <input type="number" id="efectivo_fisico" name="efectivo_fisico" min="0" step="0.01"
+                                <label for="efectivo_fisico" class="block text-sm font-medium text-gray-700 mb-1">Monto en
+                                    efectivo (L.)</label>
+                                <input type="number" id="efectivo_fisico" name="efectivo_fisico" min="0"
+                                    step="0.01"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                     placeholder="0.00" required>
                             </div>
-                            
+
                             <div class="flex justify-end gap-3">
                                 <button type="button" onclick="cerrarModal()"
                                     class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -206,11 +239,11 @@
                 function abrirModal(id) {
                     const form = document.getElementById('formEfectivo');
                     form.action = `/cierres/${id}/actualizar-efectivo`;
-                    
+
                     const modal = document.getElementById('modalEfectivo');
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
-                    
+
                     // Enfocar el input al abrir el modal
                     setTimeout(() => {
                         document.getElementById('efectivo_fisico').focus();

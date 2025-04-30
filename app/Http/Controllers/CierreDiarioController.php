@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\CierreDiario;
-use App\Models\Venta;
-use Illuminate\Http\Request;
 use App\Models\Factura;
+use App\Models\Reparacion;
 use App\Models\AbonoReparacion;
+use App\Models\SalidaCaja;
+use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use App\Models\Reparacion;
-
-
 
 class CierreDiarioController extends Controller
 {
@@ -43,21 +41,24 @@ class CierreDiarioController extends Controller
             ->whereNotIn('reparacion_id', $facturadas)
             ->sum('monto');
 
-        $totalEfectivo = $totalVentas + $totalReparaciones + $totalAbonos;
+        // NUEVO: Salidas de caja
+        $totalSalidas = SalidaCaja::whereDate('created_at', $fechaHoy)->sum('monto');
+
+        // Total neto en sistema = ingresos - egresos
+        $totalEfectivo = $totalVentas + $totalReparaciones + $totalAbonos - $totalSalidas;
 
         $cierre = CierreDiario::create([
             'fecha' => $fechaHoy,
             'total_ventas' => $totalVentas,
             'total_reparaciones' => $totalReparaciones,
             'total_abonos' => $totalAbonos,
+            'total_salidas' => $totalSalidas,
             'total_efectivo' => $totalEfectivo,
             'usuario_id' => auth()->id(),
         ]);
 
-
         return redirect()->route('cierres.index')->with('success', 'Cierre de hoy realizado. Puedes ingresar el efectivo físico.');
     }
-
 
     public function actualizarEfectivo(Request $request, $id)
     {
@@ -72,7 +73,6 @@ class CierreDiarioController extends Controller
         return back()->with('success', 'Efectivo físico registrado correctamente.');
     }
 
-
     public function descargar($id)
     {
         $cierre = CierreDiario::findOrFail($id);
@@ -86,6 +86,7 @@ class CierreDiarioController extends Controller
             'ventas' => $cierre->total_ventas,
             'reparaciones' => $cierre->total_reparaciones,
             'abonos' => $cierre->total_abonos,
+            'salidas' => $cierre->total_salidas, 
             'totalFinal' => $cierre->total_efectivo,
             'efectivo_fisico' => $cierre->efectivo_fisico,
             'diferencia' => $diferencia,

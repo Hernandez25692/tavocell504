@@ -16,6 +16,7 @@ class CierreDiario extends Model
         'total_ventas',
         'total_reparaciones',
         'total_abonos',
+        'total_salidas',
         'total_efectivo',
         'efectivo_fisico',
         'usuario_id',

@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\SalidaCaja;
+use Illuminate\Support\Facades\Auth;
+
+class SalidaCajaController extends Controller
+{
+    public function index()
+    {
+        $salidas = SalidaCaja::with('usuario')->latest()->get();
+        return view('salidas_caja.index', compact('salidas'));
+    }
+
+    public function create()
+    {
+        return view('salidas_caja.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'monto' => 'required|numeric|min:0.01',
+            'motivo' => 'required|string|max:255',
+            'comprobante' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+        ]);
+
+        $data = [
+            'usuario_id' => Auth::id(),
+            'monto' => $request->monto,
+            'motivo' => $request->motivo,
+        ];
+
+        if ($request->hasFile('comprobante')) {
+            $data['comprobante'] = $request->file('comprobante')->store('comprobantes_salidas', 'public');
+        }
+
+        SalidaCaja::create($data);
+
+        return redirect()->route('salidas-caja.index')->with('success', 'Salida de caja registrada correctamente.');
+    }
+}

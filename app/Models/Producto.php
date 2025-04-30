@@ -23,8 +23,19 @@ class Producto extends Model
         'precio_compra',
         'precio_venta',
         'proveedor',
-        'imagen'
+        'imagen',
+        'es_celular',          
+        'imei',                
+        'color',               
+        'ram',                 
+        'almacenamiento',      
+        'marca',               
+        'modelo',              
+        'sistema_operativo' ,
+        'es_celular',
+           
     ];
+
     public function detallesFactura()
     {
         return $this->hasMany(DetalleFactura::class);

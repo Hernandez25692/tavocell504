@@ -8,11 +8,26 @@ use Illuminate\Support\Facades\Auth;
 
 class SalidaCajaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $salidas = SalidaCaja::with('usuario')->latest()->get();
+        $buscar = $request->buscar;
+        $desde = $request->desde;
+        $hasta = $request->hasta;
+
+        $salidas = \App\Models\SalidaCaja::with('usuario')
+            ->when($buscar, function ($q) use ($buscar) {
+                $q->where('motivo', 'like', "%$buscar%")
+                    ->orWhereHas('usuario', fn($u) => $u->where('name', 'like', "%$buscar%"));
+            })
+            ->when($desde, fn($q) => $q->whereDate('created_at', '>=', $desde))
+            ->when($hasta, fn($q) => $q->whereDate('created_at', '<=', $hasta))
+            ->latest()
+            ->paginate(10);
+
         return view('salidas_caja.index', compact('salidas'));
     }
+
+
 
     public function create()
     {

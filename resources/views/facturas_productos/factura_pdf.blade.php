@@ -198,12 +198,26 @@
         <tbody>
             @foreach ($factura->detalles as $detalle)
                 <tr>
-                    <td>{{ $detalle->producto->nombre ?? 'Servicio de reparación' }}</td>
+                    <td>
+                        <strong>{{ $detalle->producto->nombre ?? 'Servicio de reparación' }}</strong>
+                        @if (!empty($detalle->producto) && $detalle->producto->es_celular)
+                            <div style="font-size: 11px; margin-top: 4px;">
+                                IMEI: {{ $detalle->producto->imei ?? 'N/D' }}<br>
+                                Marca: {{ $detalle->producto->marca ?? 'N/D' }}<br>
+                                Modelo: {{ $detalle->producto->modelo ?? 'N/D' }}<br>
+                                Color: {{ $detalle->producto->color ?? 'N/D' }}<br>
+                                RAM: {{ $detalle->producto->ram ?? 'N/D' }} | Almacenamiento:
+                                {{ $detalle->producto->almacenamiento ?? 'N/D' }}<br>
+                                SO: {{ $detalle->producto->sistema_operativo ?? 'N/D' }}
+                            </div>
+                        @endif
+                    </td>
                     <td>{{ $detalle->cantidad }}</td>
                     <td>L. {{ number_format($detalle->precio_unitario, 2) }}</td>
                     <td>L. {{ number_format($detalle->subtotal, 2) }}</td>
                 </tr>
             @endforeach
+
         </tbody>
     </table>
 

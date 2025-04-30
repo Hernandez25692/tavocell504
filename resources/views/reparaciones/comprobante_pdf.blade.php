@@ -258,14 +258,24 @@
             </div>
         </div>
 
-        <div class="terms">
-            <p><strong>TÉRMINOS Y CONDICIONES:</strong> TavoCell 504 no se hace responsable por daños o pérdida de datos
-                durante el proceso de reparación. Se recomienda realizar copia de seguridad antes de entregar el
-                dispositivo. El cliente tiene 30 días para reclamar después de la fecha de entrega. Pasado este tiempo,
-                el dispositivo no reclamado será considerado abandonado según nuestra política. Garantía de 30 días en
-                repuestos y mano de obra, excepto en casos de daño físico o mal uso.</p>
-            <p style="text-align: center; margin-top: 6px;">¡Gracias por confiar en <strong>TavoCell 504</strong>!</p>
+        <div class="bg-gray-50 border border-gray-300 p-4 mt-6 rounded text-sm leading-relaxed text-gray-800">
+            <p class="font-bold text-tavocell-primary mb-2">📋 POLÍTICA DE REPARACIONES – TavoCell 504</p>
+            <ul class="list-decimal pl-5 space-y-2">
+                <li>No nos hacemos responsables por fallas ocultas no declaradas por el cliente, presentes en el
+                    celular, que solo son identificadas en una revisión técnica completa.</li>
+                <li>No nos hacemos responsables por celulares dejados en el taller por más de 30 días. El cliente
+                    perderá todo derecho sobre el equipo, el cual pasará a ser reciclado y desechado.</li>
+                <li>Si el cliente no aprueba el servicio de reparación, se cobrará un valor de revisión de <strong>L.
+                        50.00</strong>.</li>
+                <li>La garantía cubre únicamente la pieza reparada. No aplica si el celular es manipulado posteriormente
+                    por terceros.</li>
+                <li>Se recomienda al cliente no dejar chip, memorias ni cobertores. TavoCell 504 no se responsabiliza en
+                    caso de pérdida.</li>
+            </ul>
+            <p class="text-center mt-4 font-semibold text-indigo-700">¡Gracias por confiar en <strong>TavoCell
+                    504</strong>!</p>
         </div>
+
     </div>
 </body>
 

@@ -8,11 +8,18 @@ use App\Models\HistorialPrecioProducto;
 
 class ProductoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $productos = Producto::all();
+        $buscar = $request->input('buscar');
+
+        $productos = Producto::when($buscar, function ($query, $buscar) {
+            $query->where('nombre', 'like', "%$buscar%")
+                ->orWhere('codigo', 'like', "%$buscar%");
+        })->orderBy('nombre')->paginate(10);
+
         return view('productos.index', compact('productos'));
     }
+
 
     public function create()
     {
@@ -29,9 +36,36 @@ class ProductoController extends Controller
             'precio_compra' => 'required|numeric',
             'precio_venta' => 'required|numeric',
             'proveedor' => 'nullable|string',
+
+            // Celular
+            'es_celular' => 'nullable|boolean',
+            'imei' => 'nullable|string|max:50',
+            'color' => 'nullable|string|max:50',
+            'ram' => 'nullable|string|max:50',
+            'almacenamiento' => 'nullable|string|max:50',
+            'marca' => 'nullable|string|max:50',
+            'modelo' => 'nullable|string|max:50',
+            'sistema_operativo' => 'nullable|string|max:50',
         ]);
 
-        $producto = Producto::create($request->all()); // ✅ Aquí se guarda en $producto
+        $producto = Producto::create([
+            'nombre' => $request->nombre,
+            'codigo' => $request->codigo,
+            'descripcion' => $request->descripcion,
+            'stock' => $request->stock,
+            'precio_compra' => $request->precio_compra,
+            'precio_venta' => $request->precio_venta,
+            'proveedor' => $request->proveedor,
+            'es_celular' => $request->has('es_celular') ? 1 : 0,
+
+            'imei' => $request->imei,
+            'color' => $request->color,
+            'ram' => $request->ram,
+            'almacenamiento' => $request->almacenamiento,
+            'marca' => $request->marca,
+            'modelo' => $request->modelo,
+            'sistema_operativo' => $request->sistema_operativo,
+        ]);
 
         HistorialPrecioProducto::create([
             'producto_id' => $producto->id,
@@ -58,12 +92,42 @@ class ProductoController extends Controller
             'precio_compra' => 'required|numeric',
             'precio_venta' => 'required|numeric',
             'proveedor' => 'nullable|string',
+
+            // Celular
+            'es_celular' => 'nullable|boolean',
+            'imei' => 'nullable|string|max:50',
+            'color' => 'nullable|string|max:50',
+            'ram' => 'nullable|string|max:50',
+            'almacenamiento' => 'nullable|string|max:50',
+            'marca' => 'nullable|string|max:50',
+            'modelo' => 'nullable|string|max:50',
+            'sistema_operativo' => 'nullable|string|max:50',
         ]);
 
-        $producto->update($request->all());
+        $producto->update([
+            'nombre' => $request->nombre,
+            'codigo' => $request->codigo,
+            'descripcion' => $request->descripcion,
+            'stock' => $request->stock,
+            'precio_compra' => $request->precio_compra,
+            'precio_venta' => $request->precio_venta,
+            'proveedor' => $request->proveedor,
+
+
+            'es_celular' => $request->has('es_celular') ? 1 : 0,
+
+            'imei' => $request->imei,
+            'color' => $request->color,
+            'ram' => $request->ram,
+            'almacenamiento' => $request->almacenamiento,
+            'marca' => $request->marca,
+            'modelo' => $request->modelo,
+            'sistema_operativo' => $request->sistema_operativo,
+        ]);
 
         return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
+
 
     public function destroy(Producto $producto)
     {
@@ -74,7 +138,7 @@ class ProductoController extends Controller
 
     public function buscarPorCodigo($codigo)
     {
-        $producto = \App\Models\Producto::where('codigo', $codigo)->first();
+        $producto = Producto::where('codigo', $codigo)->first();
 
         if (!$producto) {
             return response()->json(['error' => 'Producto no encontrado'], 404);

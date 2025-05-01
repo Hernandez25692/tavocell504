@@ -10,17 +10,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
+
 
 class FacturaProductoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $facturas = Factura::with('cliente', 'usuario', 'detalles.producto')
-            ->whereHas('detalles', fn($q) => $q->whereNotNull('producto_id'))
-            ->latest()->get();
+        $query = Factura::with('cliente', 'usuario', 'detalles.producto')
+            ->whereHas('detalles', fn($q) => $q->whereNotNull('producto_id'));
+
+        if ($request->filled('codigo')) {
+            $codigo = $request->codigo;
+            if (Str::startsWith($codigo, 'PROD-')) {
+                $id = (int) Str::after($codigo, 'PROD-');
+                $query->where('id', $id);
+            } elseif (is_numeric($codigo)) {
+                $query->where('id', $codigo);
+            } else {
+                $query->where('codigo', $codigo); // Por si se usa campo 'codigo' real
+            }
+        }
+
+        $facturas = $query->latest()->paginate(10);
 
         return view('facturas_productos.index', compact('facturas'));
     }
+
 
     public function create()
     {
@@ -84,6 +100,8 @@ class FacturaProductoController extends Controller
                 'monto_recibido' => $request->monto_recibido,
                 'cambio' => $request->monto_recibido - $subtotal,
             ]);
+            $factura->codigo = 'PROD-' . str_pad($factura->id, 5, '0', STR_PAD_LEFT);
+            $factura->save();
 
             foreach ($detalles as $detalle) {
                 $factura->detalles()->create($detalle);

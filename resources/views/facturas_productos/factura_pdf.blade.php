@@ -156,9 +156,9 @@
         <div class="header-info">
             <div style="font-size: 14px; font-weight: bold; color: #1e40af;">TAVOCELL 504</div>
             <div>Teléfono: +504 3238-4184</div>
-            <div>Email: info@tavocell504.com</div>
+            <div>Email: tavocell504@gmail.com</div>
             <div>Dirección: San Jeronimo, Namasigue, Honduras</div>
-            <div>RTN: 00000000000000</div>
+
         </div>
     </div>
 
@@ -168,7 +168,9 @@
         <div class="copia">FACTURA ORIGINAL</div>
     @endif
 
-    <h1>FACTURA #{{ $factura->id }}</h1>
+    <h1 class="invoice-title">Factura {{ $factura->codigo ?? 'PROD-' . str_pad($factura->id, 5, '0', STR_PAD_LEFT) }}
+    </h1>
+
 
     <div class="datos">
         <table>
@@ -189,7 +191,7 @@
     <table class="productos">
         <thead>
             <tr>
-                <th width="55%">Descripción</th>
+                <th width="55%">Descripción </th>
                 <th width="15%">Cantidad</th>
                 <th width="15%">P. Unitario</th>
                 <th width="15%">Subtotal</th>
@@ -199,19 +201,39 @@
             @foreach ($factura->detalles as $detalle)
                 <tr>
                     <td>
-                        <strong>{{ $detalle->producto->nombre ?? 'Servicio de reparación' }}</strong>
+                        <strong>
+                            @if (!empty($detalle->producto->codigo))
+                                {{ $detalle->producto->codigo }} -
+                            @endif
+                            {{ $detalle->producto->nombre ?? 'Servicio de reparación' }}
+                        </strong>
+
                         @if (!empty($detalle->producto) && $detalle->producto->es_celular)
                             <div style="font-size: 11px; margin-top: 4px;">
-                                IMEI: {{ $detalle->producto->imei ?? 'N/D' }}<br>
-                                Marca: {{ $detalle->producto->marca ?? 'N/D' }}<br>
-                                Modelo: {{ $detalle->producto->modelo ?? 'N/D' }}<br>
-                                Color: {{ $detalle->producto->color ?? 'N/D' }}<br>
-                                RAM: {{ $detalle->producto->ram ?? 'N/D' }} | Almacenamiento:
-                                {{ $detalle->producto->almacenamiento ?? 'N/D' }}<br>
-                                SO: {{ $detalle->producto->sistema_operativo ?? 'N/D' }}
+                                @if (!empty($detalle->producto->imei))
+                                    IMEI: {{ $detalle->producto->imei }}<br>
+                                @endif
+                                @if (!empty($detalle->producto->marca))
+                                    Marca: {{ $detalle->producto->marca }}<br>
+                                @endif
+                                @if (!empty($detalle->producto->modelo))
+                                    Modelo: {{ $detalle->producto->modelo }}<br>
+                                @endif
+                                @if (!empty($detalle->producto->color))
+                                    Color: {{ $detalle->producto->color }}<br>
+                                @endif
+                                @if (!empty($detalle->producto->ram) || !empty($detalle->producto->almacenamiento))
+                                    RAM: {{ $detalle->producto->ram ?? 'N/D' }} |
+                                    Almacenamiento: {{ $detalle->producto->almacenamiento ?? 'N/D' }}<br>
+                                @endif
+                                @if (!empty($detalle->producto->sistema_operativo))
+                                    SO: {{ $detalle->producto->sistema_operativo }}
+                                @endif
                             </div>
                         @endif
                     </td>
+
+
                     <td>{{ $detalle->cantidad }}</td>
                     <td>L. {{ number_format($detalle->precio_unitario, 2) }}</td>
                     <td>L. {{ number_format($detalle->subtotal, 2) }}</td>

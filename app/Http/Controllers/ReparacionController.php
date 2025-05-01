@@ -161,7 +161,7 @@ class ReparacionController extends Controller
         $subtotal = $reparacion->costo_total;
         $saldo = $subtotal - $reparacion->abono;
 
-        // Ya está pagado, entonces el monto recibido es 0 (no hay vuelto)
+        // Creamos factura sin código aún
         $factura = Factura::create([
             'cliente_id' => $cliente_id,
             'usuario_id' => Auth::id(),
@@ -171,6 +171,10 @@ class ReparacionController extends Controller
             'monto_recibido' => $saldo > 0 ? $saldo : 0,
             'cambio' => 0,
         ]);
+
+        // Generamos código tipo REP-00001
+        $factura->codigo = 'REP-' . str_pad($factura->id, 5, '0', STR_PAD_LEFT);
+        $factura->save();
 
         $factura->detalles()->create([
             'producto_id' => null,
@@ -188,6 +192,7 @@ class ReparacionController extends Controller
         return redirect()->route('facturas_reparaciones.show', $factura->id)
             ->with('success', 'Factura generada correctamente.');
     }
+
 
 
     public function abonar(Request $request, Reparacion $reparacion)

@@ -18,7 +18,11 @@
 
             <!-- ENCABEZADO -->
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                <h1 class="text-3xl font-bold text-gray-800 mb-4">📱 Seguimiento de Reparación #{{ $reparacion->id }}</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                    📱 Seguimiento de Reparación
+                    #{{ $reparacion->factura?->codigo ?? 'REP-' . str_pad($reparacion->id, 5, '0', STR_PAD_LEFT) }}
+                </h1>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
                     <p><span class="font-semibold">👤 Cliente:</span> {{ $reparacion->cliente->nombre }}</p>
                     <p><span class="font-semibold">📱 Dispositivo:</span> {{ $reparacion->marca }} {{ $reparacion->modelo }}
@@ -57,7 +61,7 @@
                     <div class="mb-4">
                         <label for="imagenes[]" class="block font-semibold text-gray-700">Subir imágenes del
                             seguimiento</label>
-                        <input type="file" name="imagenes[]" multiple accept="image/*"
+                        <input type="file" name="imagenes[]" multiple accept=".jpg,.jpeg,.png,.gif,.bmp,.webp"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <p class="text-xs text-gray-500 mt-1">Puedes subir varias imágenes del estado actual del equipo.</p>
                     </div>

@@ -14,7 +14,11 @@
                         <div class="flex items-center">
                             <img src="{{ asset('Logo/logo_menu.png') }}" alt="TavoCell 504" class="h-12 mr-4">
                             <div>
-                                <h1 class="text-2xl font-bold">Seguimiento de Reparación #{{ $reparacion->id }}</h1>
+                                <h1 class="text-2xl font-bold">
+                                    Seguimiento de Reparación
+                                    #{{ $reparacion->factura?->codigo ?? 'REP-' . str_pad($reparacion->id, 5, '0', STR_PAD_LEFT) }}
+                                </h1>
+
                                 <p class="text-tavocell-light text-sm mt-1">"Honradez, Calidad y Servicio"</p>
                             </div>
                         </div>

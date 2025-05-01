@@ -179,7 +179,10 @@
             <table class="info-table">
                 <tr>
                     <td class="label">Código de Reparación:</td>
-                    <td>REP-{{ str_pad($reparacion->id, 5, '0', STR_PAD_LEFT) }}</td>
+                    <td>
+                        {{ $reparacion->factura?->codigo ?? 'REP-' . str_pad($reparacion->id, 5, '0', STR_PAD_LEFT) }}
+                    </td>
+
                 </tr>
 
                 <tr>

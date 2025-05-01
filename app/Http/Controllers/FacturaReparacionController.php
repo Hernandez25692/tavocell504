@@ -5,21 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Factura;
 use App\Models\Reparacion;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class FacturaReparacionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Cargamos las facturas Y sus reparaciones asociadas por 'factura_id'
-        $facturas = Factura::with(['cliente', 'usuario', 'detalles'])
-            ->whereHas('detalles', fn($q) => $q->whereNull('producto_id'))
-            ->latest()
-            ->get();
+        $query = Factura::with(['cliente', 'usuario', 'detalles'])
+            ->whereHas('detalles', fn($q) => $q->whereNull('producto_id'));
 
-        // Obtenemos las reparaciones indexadas por factura_id
-        $reparaciones = Reparacion::whereIn('factura_id', $facturas->pluck('id'))
-            ->get()
-            ->keyBy('factura_id');
+        if ($request->filled('codigo')) {
+            $codigo = $request->codigo;
+
+            if (Str::startsWith($codigo, 'REP-')) {
+                $id = (int) Str::after($codigo, 'REP-');
+                $query->where('id', $id);
+            } elseif (is_numeric($codigo)) {
+                $query->where('id', $codigo);
+            } else {
+                $query->where('codigo', $codigo); 
+            }
+        }
+
+        $facturas = $query->latest()->paginate(10);
+        $reparaciones = Reparacion::whereIn('factura_id', $facturas->pluck('id'))->get()->keyBy('factura_id');
 
         return view('facturas_reparaciones.index', compact('facturas', 'reparaciones'));
     }

@@ -90,7 +90,7 @@
                     @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('cajero'))
                         <x-nav-link :href="route('suscripciones-netflix.index')" :active="request()->routeIs('suscripciones-netflix.*')" class="nav-item">
                             <span class="nav-icon">🎬</span>
-                            <span>Suscripciones Netflix</span>
+                            <span>Suscrip/Netflix</span>
                         </x-nav-link>
                     @endif
 
@@ -249,7 +249,7 @@
 
             @role('admin|cajero')
                 <x-responsive-nav-link :href="route('suscripciones-netflix.index')" :active="request()->routeIs('suscripciones-netflix.*')" class="mobile-nav-item">
-                    <span class="nav-icon">🎬</span> Suscripciones Netflix
+                    <span class="nav-icon">🎬</span> Suscrip/Netflix
                 </x-responsive-nav-link>
             @endrole
 

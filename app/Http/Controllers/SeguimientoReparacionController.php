@@ -23,9 +23,11 @@ class SeguimientoReparacionController extends Controller
     {
         $reparacion->load('cliente');
         $request->validate([
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:1000',
             'estado' => 'required|in:recibido,en_proceso,listo,entregado',
+            'imagenes.*' => 'nullable|image|max:16384', // Max 16MB por imagen
         ]);
+
 
         $estado = $request->estado;
         $pendiente = $reparacion->costo_total - $reparacion->abono;

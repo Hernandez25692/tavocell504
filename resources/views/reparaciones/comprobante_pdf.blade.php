@@ -262,7 +262,7 @@
         </div>
 
         <div class="bg-gray-50 border border-gray-300 p-4 mt-6 rounded text-sm leading-relaxed text-gray-800">
-            <p class="font-bold text-tavocell-primary mb-2">📋 POLÍTICA DE REPARACIONES – TavoCell 504</p>
+            <p class="font-bold text-tavocell-primary mb-2">POLÍTICA DE REPARACIONES – TavoCell 504</p>
             <ul class="list-decimal pl-5 space-y-2">
                 <li>No nos hacemos responsables por fallas ocultas no declaradas por el cliente, presentes en el
                     celular, que solo son identificadas en una revisión técnica completa.</li>

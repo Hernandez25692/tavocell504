@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $ingresosTotales = $ingresosProductos + $ingresosReparaciones - $salidasCajaHoy;
 
         $totalFacturasHoy = Factura::whereDate('created_at', $hoy)->count();
-        $reparacionesActivas = Reparacion::where('estado', '!=', 'Finalizado')->count();
+        $reparacionesActivas = Reparacion::where('estado', '!=', 'listo')->count();
 
         $ingresosPorDia = Factura::select(DB::raw("DATE(created_at) as fecha"), DB::raw("SUM(total) as total"))
             ->whereDate('created_at', '>=', Carbon::now()->subDays(6))

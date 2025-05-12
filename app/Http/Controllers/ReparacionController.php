@@ -226,10 +226,58 @@ class ReparacionController extends Controller
         return back()->with('success', 'Abono registrado correctamente.');
     }
 
+    public function edit($id)
+    {
+        $reparacion = Reparacion::findOrFail($id);
+        $clientes = Cliente::all();
+        $tecnicos = User::all();
+
+        return view('reparaciones.edit', compact('reparacion', 'clientes', 'tecnicos'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $reparacion = Reparacion::findOrFail($id);
+
+        $request->validate([
+            'cliente_id' => 'required|exists:clientes,id',
+            'marca' => 'required|string|max:100',
+            'modelo' => 'required|string|max:100',
+            'imei' => 'nullable|string|max:50',
+            'falla_reportada' => 'required|string',
+            'accesorios' => 'nullable|string',
+            'tecnico_id' => 'required|exists:users,id',
+            'fecha_ingreso' => 'required|date',
+            'costo_total' => 'required|numeric|min:0',
+            'costo_tavocell' => 'nullable|numeric|min:0',
+            'estado' => 'required|in:recibido,en_proceso,listo,entregado',
+        ]);
+
+        $ganancia = $request->costo_total - ($request->costo_tavocell ?? 0);
+
+        $reparacion->update([
+            'cliente_id' => $request->cliente_id,
+            'marca' => $request->marca,
+            'modelo' => $request->modelo,
+            'imei' => $request->imei,
+            'falla_reportada' => $request->falla_reportada,
+            'accesorios' => $request->accesorios,
+            'tecnico_id' => $request->tecnico_id,
+            'fecha_ingreso' => $request->fecha_ingreso,
+            'costo_total' => $request->costo_total,
+            'costo_tavocell' => $request->costo_tavocell,
+            'ganancia' => $ganancia,
+            'estado' => $request->estado,
+        ]);
+
+        return redirect()->route('reparaciones.index')->with('success', 'Reparación actualizada correctamente.');
+    }
+
+
 
     // Métodos vacíos
     public function show(string $id) {}
-    public function edit(string $id) {}
-    public function update(Request $request, string $id) {}
+
+
     public function destroy(string $id) {}
 }

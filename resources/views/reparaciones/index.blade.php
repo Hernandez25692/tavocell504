@@ -209,6 +209,13 @@
                                             </svg>
                                             Seguimiento
                                         </a>
+                                        @if ($rep->estado !== 'entregado')
+                                            <a href="{{ route('reparaciones.edit', $rep->id) }}"
+                                                class="mt-2 inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 transition transform hover:scale-105">
+                                                ✏️ Editar
+                                            </a>
+                                        @endif
+
                                         @php
                                             $comprobanteRuta =
                                                 'storage/comprobantes/comprobante_reparacion_' . $rep->id . '.pdf';

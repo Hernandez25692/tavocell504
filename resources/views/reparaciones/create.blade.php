@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-8 animate-fade-in">
         <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-6">
             <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                🛠️ Registrar Nueva Reparación
+                🛠️-Registrar Nueva Reparación
             </h1>
 
             @if ($errors->any())
@@ -115,6 +115,22 @@
             </form>
         </div>
     </div>
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('select[name="cliente_id"]').select2({
+                    placeholder: "Seleccionar cliente",
+                    width: '100%'
+                });
+            });
+        </script>
+    @endpush
 
     @push('styles')
         <style>

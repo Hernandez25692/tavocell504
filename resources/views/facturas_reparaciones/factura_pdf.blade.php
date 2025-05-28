@@ -169,7 +169,7 @@
                 <img src="{{ public_path('Logo/logo_menu.png') }}" class="logo" alt="TavoCell 504 Logo">
             </div>
             <div class="company-info">
-                Especialistas en Reparación de Dispositivos Móviles | Teléfono: 3238-4184
+                Tienda de accesorios y venta de telefonía móvil | Teléfono: 3238-4184
             </div>
             <h1 class="invoice-title">FACTURA DE REPARACIÓN</h1>
             <div class="invoice-number">No.

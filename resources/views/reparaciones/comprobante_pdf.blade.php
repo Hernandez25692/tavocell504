@@ -169,7 +169,7 @@
     <div class="container">
         <div class="header">
             <img src="{{ public_path('Logo/logo_menu.png') }}" class="logo" alt="TavoCell 504 Logo">
-            <div class="company-info">TavoCell 504 - Especialistas en Reparación de Dispositivos Móviles</div>
+            <div class="company-info">TavoCell 504 - Tienda de accesorios y venta de telefonía móvil</div>
             <h1>COMPROBANTE DE REPARACIÓN</h1>
             <div class="subtitle">Seguimiento de estado de su dispositivo</div>
         </div>

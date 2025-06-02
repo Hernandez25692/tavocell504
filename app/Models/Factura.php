@@ -39,4 +39,12 @@ class Factura extends Model
     {
         return $this->hasOne(Reparacion::class);
     }
+    public function devoluciones()
+    {
+        return $this->hasMany(Devolucion::class);
+    }
+    public function devolucion()
+    {
+        return $this->hasOne(Devolucion::class);
+    }
 }

@@ -49,6 +49,8 @@
                             <th class="px-6 py-3">Fecha</th>
                             <th class="px-6 py-3">Cliente</th>
                             <th class="px-6 py-3">Total</th>
+                            <th class="px-6 py-3">Estado</th>
+
                             <th class="px-6 py-3 text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -63,6 +65,20 @@
                                 <td class="px-6 py-4">{{ $factura->cliente->nombre ?? 'Consumidor Final' }}</td>
                                 <td class="px-6 py-4 font-bold text-green-700">L. {{ number_format($factura->total, 2) }}
                                 </td>
+                                <td class="px-6 py-4 text-center">
+                                    @if ($factura->devoluciones->isNotEmpty())
+                                        <span
+                                            class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                                            ⚠️ Tiene devolución
+                                        </span>
+                                    @else
+                                        <span
+                                            class="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+                                            ✅ Sin devolución
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <td class="px-6 py-4 text-center flex gap-2 justify-center">
                                     <a href="{{ route('facturas_productos.show', $factura->id) }}"
                                         class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm shadow">Ver</a>

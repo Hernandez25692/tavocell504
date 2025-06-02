@@ -78,6 +78,9 @@
                                 <x-nav-link :href="route('facturas_reparaciones.index')" class="nav-dropdown-item">
                                     <span class="nav-icon">🔧</span> Historial Reparaciones
                                 </x-nav-link>
+                                <x-nav-link :href="route('devoluciones.buscar')" class="nav-dropdown-item">
+                                    <span class="nav-icon">↩️</span> Devoluciones
+                                </x-nav-link>
                                 @if (Auth::user()->hasRole('admin'))
                                     <x-nav-link :href="route('cierres.index')" class="nav-dropdown-item">
                                         <span class="nav-icon">🔒</span> Cierres Diarios
@@ -86,6 +89,7 @@
                             </div>
                         </div>
                     @endif
+
 
                     @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('cajero'))
                         <x-nav-link :href="route('suscripciones-netflix.index')" :active="request()->routeIs('suscripciones-netflix.*')" class="nav-item">

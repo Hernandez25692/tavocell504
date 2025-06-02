@@ -8,6 +8,8 @@ use App\Models\Devolucion;
 use App\Models\DetalleDevolucion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SalidaCaja;
+
 
 class DevolucionController extends Controller
 {
@@ -90,8 +92,17 @@ class DevolucionController extends Controller
 
         $devolucion->update(['total' => $totalDevolucion]);
 
+        // 🔁 REGISTRAR SALIDA DE CAJA AUTOMÁTICA
+        SalidaCaja::create([
+            'usuario_id' => Auth::id(),
+            'monto' => $totalDevolucion,
+            'motivo' => 'Devolución de factura ' . $factura->codigo,
+            'comprobante' => null,
+        ]);
+
         return redirect()->route('devoluciones.buscar')->with('success', 'Devolución procesada correctamente.');
     }
+
 
     public function show($id)
     {

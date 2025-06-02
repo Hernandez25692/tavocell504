@@ -20,8 +20,17 @@ class ReparacionController extends Controller
     public function index(Request $request)
     {
         $query = Reparacion::with('cliente');
+        $clientes = Cliente::all(); // << NECESARIO
 
-        // Filtro por cliente
+        $reparaciones = Reparacion::with('cliente');
+
+        if ($request->filled('cliente')) {
+            $nombre = strtolower($request->cliente);
+            $reparaciones = $reparaciones->whereHas('cliente', function ($q) use ($nombre) {
+                $q->whereRaw('LOWER(nombre) LIKE ?', ["%{$nombre}%"]);
+            });
+        }
+
         if ($request->filled('cliente')) {
             $query->whereHas('cliente', function ($q) use ($request) {
                 $q->where('nombre', 'like', '%' . $request->cliente . '%');
@@ -34,34 +43,32 @@ class ReparacionController extends Controller
             });
         }
 
-        // Filtro por estado
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
 
-        // Filtro por fechas
         if ($request->filled('desde')) {
             $query->whereDate('fecha_ingreso', '>=', $request->desde);
         }
         if ($request->filled('hasta')) {
             $query->whereDate('fecha_ingreso', '<=', $request->hasta);
         }
+
         if ($request->filled('codigo')) {
             $codigo = $request->codigo;
             if (Str::startsWith($codigo, 'REP-')) {
                 $idBuscado = (int) Str::after($codigo, 'REP-');
                 $query->where('id', $idBuscado);
             } else {
-                $query->where('id', -1); // No coincide, resultado vacío
+                $query->where('id', -1);
             }
         }
 
-
-        // APLICAR PAGINACIÓN CORRECTAMENTE
         $reparaciones = $query->orderByDesc('fecha_ingreso')->paginate(10);
 
-        return view('reparaciones.index', compact('reparaciones'));
+        return view('reparaciones.index', compact('reparaciones', 'clientes')); // <== AÑADIR $clientes
     }
+
 
 
 

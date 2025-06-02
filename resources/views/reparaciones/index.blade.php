@@ -33,17 +33,24 @@
             <form method="GET" action="{{ route('reparaciones.index') }}"
                 class="backdrop-blur-sm bg-white/80 rounded-xl shadow-lg p-6 border border-white/20 transition-all duration-300 hover:shadow-xl">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="relative">
-                        <input type="text" name="identidad" value="{{ request('identidad') }}"
+                    <div class="relative w-full max-w-sm">
+                        <input type="text" id="buscar-cliente"
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm"
-                            placeholder="Buscar por identidad">
+                            placeholder="Buscar cliente por nombre..." autocomplete="off">
+
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
+
+                        <!-- Lista de sugerencias -->
+                        <ul id="sugerencias-clientes"
+                            class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-auto hidden shadow-lg">
+                        </ul>
                     </div>
+
                     <div class="relative">
                         <input type="text" name="codigo" value="{{ request('codigo') }}"
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm"
@@ -264,6 +271,64 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            const inputBuscar = document.getElementById('buscar-cliente');
+            const sugerencias = document.getElementById('sugerencias-clientes');
+
+            // Lista de clientes en minúscula
+            const clientes = [
+                @foreach ($clientes as $cliente)
+                    {
+                        id: {{ $cliente->id }},
+                        nombre: "{{ strtolower($cliente->nombre) }}"
+                    },
+                @endforeach
+            ];
+
+            inputBuscar.addEventListener('input', function() {
+                const texto = this.value.toLowerCase().trim();
+                sugerencias.innerHTML = '';
+
+                if (texto.length === 0) {
+                    sugerencias.classList.add('hidden');
+                    return;
+                }
+
+                const coincidencias = clientes.filter(c => c.nombre.includes(texto));
+
+                if (coincidencias.length === 0) {
+                    sugerencias.classList.add('hidden');
+                    return;
+                }
+
+                coincidencias.forEach(c => {
+                    const li = document.createElement('li');
+                    li.textContent = c.nombre.charAt(0).toUpperCase() + c.nombre.slice(1);
+                    li.className = 'px-4 py-2 hover:bg-indigo-100 cursor-pointer';
+                    li.addEventListener('click', () => {
+                        inputBuscar.value = c.nombre;
+                        sugerencias.classList.add('hidden');
+
+                        // Redirigir usando query ?cliente=nombre
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('cliente', c.nombre);
+                        window.location.href = url.toString();
+                    });
+                    sugerencias.appendChild(li);
+                });
+
+                sugerencias.classList.remove('hidden');
+            });
+
+            // Ocultar si clic fuera
+            document.addEventListener('click', function(e) {
+                if (!sugerencias.contains(e.target) && e.target !== inputBuscar) {
+                    sugerencias.classList.add('hidden');
+                }
+            });
+        </script>
+    @endpush
 
     @push('styles')
         <style>

@@ -41,22 +41,36 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Sección Cliente -->
                     <div class="space-y-6">
-                        <!-- Card Buscar Cliente -->
-                        <div
-                            class="bg-gradient-to-br from-gray-50 to-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                            <label class="block text-sm font-medium mb-2 text-gray-700">Buscar Cliente por Identidad</label>
-                            <input type="text" id="buscar-identidad"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition"
-                                placeholder="0801...">
-                            <select name="cliente_id" id="cliente_id"
-                                class="mt-3 w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition">
-                                <option value="">-- Seleccionar cliente --</option>
+                        <!-- Buscar Cliente con Autocompletado -->
+                        <div class="relative mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Buscar Cliente por Nombre</label>
+                            <input type="text" id="buscar-nombre-cliente"
+                                class="w-full border-gray-300 rounded-md shadow-sm" placeholder="Ej: Juan, Karla, etc."
+                                autocomplete="off">
+
+                            <!-- Contenedor de sugerencias -->
+                            <ul id="sugerencias-clientes"
+                                class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-auto hidden shadow-md">
+                                <!-- Sugerencias se llenan dinámicamente -->
+                            </ul>
+                        </div>
+
+                        <!-- Cliente -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cliente <span
+                                    class="text-red-500">*</span></label>
+                            <select name="cliente_id" id="cliente_id" required
+                                class="w-full border-gray-300 rounded-md shadow-sm">
+                                <option value="">Seleccionar cliente</option>
                                 @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id }}" data-identidad="{{ $cliente->identidad }}">
-                                        {{ $cliente->nombre }}</option>
+                                    <option value="{{ $cliente->id }}" data-nombre="{{ strtolower($cliente->nombre) }}">
+                                        {{ $cliente->nombre }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
+
 
                         <!-- Card Buscar Producto Compacto -->
                         <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
@@ -398,6 +412,67 @@
             }
         </style>
     @endpush
+    @push('scripts')
+        <script>
+            const inputBuscar = document.getElementById('buscar-nombre-cliente');
+            const sugerenciasBox = document.getElementById('sugerencias-clientes');
+            const selectClientes = document.getElementById('cliente_id');
+
+            inputBuscar.addEventListener('input', function() {
+                const texto = this.value.toLowerCase().trim();
+                sugerenciasBox.innerHTML = '';
+
+                if (texto.length === 0) {
+                    sugerenciasBox.classList.add('hidden');
+                    return;
+                }
+
+                let coincidencias = [];
+
+                for (let option of selectClientes.options) {
+                    const nombre = option.dataset.nombre;
+                    if (nombre && nombre.includes(texto)) {
+                        coincidencias.push({
+                            id: option.value,
+                            nombre: option.text
+                        });
+                    }
+                }
+
+                if (coincidencias.length === 0) {
+                    sugerenciasBox.classList.add('hidden');
+                    return;
+                }
+
+                coincidencias.forEach(c => {
+                    const item = document.createElement('li');
+                    item.textContent = c.nombre;
+                    item.classList.add('px-4', 'py-2', 'hover:bg-indigo-100', 'cursor-pointer');
+                    item.addEventListener('click', () => {
+                        inputBuscar.value = c.nombre;
+                        selectClientes.value = c.id;
+                        sugerenciasBox.classList.add('hidden');
+
+                        // efecto visual
+                        selectClientes.classList.add('ring-2', 'ring-green-500');
+                        setTimeout(() => selectClientes.classList.remove('ring-2', 'ring-green-500'),
+                            800);
+                    });
+                    sugerenciasBox.appendChild(item);
+                });
+
+                sugerenciasBox.classList.remove('hidden');
+            });
+
+            // Ocultar sugerencias si clic fuera
+            document.addEventListener('click', function(e) {
+                if (!sugerenciasBox.contains(e.target) && e.target !== inputBuscar) {
+                    sugerenciasBox.classList.add('hidden');
+                }
+            });
+        </script>
+    @endpush
+
 
     <script>
         const productos = @json($productos);

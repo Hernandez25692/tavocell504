@@ -23,7 +23,12 @@
 
         <div class="form-group">
             <label for="telefono">Teléfono</label>
-            <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $cliente->telefono ?? '') }}">
+            <input type="text" id="telefono" name="telefono" 
+               value="{{ old('telefono', $cliente->telefono ?? '') }}"
+               maxlength="8"
+               pattern="\d{1,8}"
+               inputmode="numeric"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);">
         </div>
 
         <div class="form-group">

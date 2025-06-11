@@ -49,7 +49,7 @@
                                 REP-{{ str_pad($factura->id, 5, '0', STR_PAD_LEFT) }}
                             </td>
 
-                            <td class="px-6 py-4">{{ $factura->created_at->format('Y-m-d H:i') }}</td>
+                            <td class="px-6 py-4">{{ $factura->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-6 py-4">{{ $factura->cliente->nombre ?? 'Consumidor Final' }}</td>
                             <td class="px-6 py-4">{{ $factura->detalles->first()->descripcion ?? 'Servicio de reparación' }}
                             </td>

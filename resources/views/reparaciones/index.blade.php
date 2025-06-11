@@ -125,135 +125,194 @@
             <div
                 class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
-                            <tr>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    #
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Código
-                                </th>
-
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Cliente
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Dispositivo
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Falla
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Estado
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Ingreso
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
-                                    Monto
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">
-                                    Acciones
-                                </th>
+                    <table class="min-w-full divide-y divide-gray-300 text-sm advanced-table">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider rounded-tl-2xl sticky top-0 z-10">#</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Código</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Cliente</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Dispositivo</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Falla</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Estado</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Ingreso</th>
+                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Monto</th>
+                                <th class="px-4 py-3 text-center font-semibold uppercase tracking-wider rounded-tr-2xl sticky top-0 z-10">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($reparaciones as $index => $rep)
-                                <tr class="transition-all duration-200 hover:bg-indigo-50/50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <tbody class="bg-white">
+                            @forelse ($reparaciones->sortByDesc('fecha_ingreso') as $index => $rep)
+                                <tr class="hover:bg-indigo-50/70 transition-all duration-200 group border-b-4 border-indigo-200/40">
+                                    <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
                                         {{ $reparaciones->firstItem() + $index }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 font-semibold">
+                                    <td class="px-4 py-3 whitespace-nowrap font-semibold text-indigo-700">
                                         REP-{{ str_pad($rep->id, 5, '0', STR_PAD_LEFT) }}
                                     </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                                        {{ $rep->cliente->nombre }}
+                                    <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-800 flex items-center gap-2">
+                                        <span class="inline-block w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-base">
+                                            {{ strtoupper(mb_substr($rep->cliente->nombre, 0, 1)) }}
+                                        </span>
+                                        <span>
+                                            {{ $rep->cliente->nombre }}
+                                            <br>
+                                            <span class="text-xs text-gray-400">{{ $rep->cliente->telefono ?? '' }}</span>
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <span class="font-medium">{{ $rep->marca }}</span> {{ $rep->modelo }}
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-700">
+                                        <span class="font-semibold">{{ $rep->marca }}</span> {{ $rep->modelo }}
+                                        <br>
+                                        <span class="text-xs text-gray-400">{{ $rep->serie ?? '' }}</span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                                        {{ $rep->falla_reportada }}
+                                    <td class="px-4 py-3 max-w-xs truncate text-gray-600">
+                                        {{ \Illuminate\Support\Str::limit($rep->falla_reportada, 30) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <td class="px-4 py-3 whitespace-nowrap">
                                         @php
                                             $estadoClases = [
-                                                'pendiente' => 'bg-red-100 text-red-800',
-                                                'en_proceso' => 'bg-yellow-100 text-yellow-800',
-                                                'listo' => 'bg-green-100 text-green-800',
-                                                'entregado' => 'bg-blue-100 text-blue-800',
+                                                'pendiente' => 'bg-red-100 text-red-700 border border-red-300',
+                                                'en_proceso' => 'bg-yellow-100 text-yellow-800 border border-yellow-300',
+                                                'listo' => 'bg-green-100 text-green-800 border border-green-300',
+                                                'entregado' => 'bg-blue-100 text-blue-800 border border-blue-300',
                                             ];
-                                            $estadoClase = $estadoClases[$rep->estado] ?? 'bg-gray-100 text-gray-800';
+                                            $estadoClase = $estadoClases[$rep->estado] ?? 'bg-gray-100 text-gray-800 border border-gray-300';
                                         @endphp
-                                        <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $estadoClase }}">
+                                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold shadow-sm {{ $estadoClase }}">
                                             {{ ucfirst(str_replace('_', ' ', $rep->estado)) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ $rep->fecha_ingreso }}
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-600">
+                                        {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-4 py-3 whitespace-nowrap font-semibold text-gray-900">
                                         L. {{ number_format($rep->costo_total, 2) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                        <a href="{{ route('seguimientos.index', $rep->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                            </svg>
-                                            Seguimiento
-                                        </a>
-                                        @if ($rep->estado !== 'entregado')
-                                            <a href="{{ route('reparaciones.edit', $rep->id) }}"
-                                                class="mt-2 inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 transition transform hover:scale-105">
-                                                ✏️ Editar
+                                    <td class="px-2 py-3 whitespace-nowrap text-center flex flex-col gap-2 items-center justify-center min-w-[110px]">
+                                        <div class="flex flex-wrap gap-2 justify-center">
+                                            {{-- Ver seguimiento --}}
+                                            <a href="{{ route('seguimientos.index', $rep->id) }}"
+                                                class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-semibold rounded-full shadow text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all duration-200 hover:scale-105"
+                                                title="Ver seguimiento">
+                                                <i class="fa-solid fa-eye"></i>
                                             </a>
-                                        @endif
-
-                                        @php
-                                            $comprobanteRuta =
-                                                'storage/comprobantes/comprobante_reparacion_' . $rep->id . '.pdf';
-                                        @endphp
-
-                                        @if (file_exists(public_path($comprobanteRuta)))
-                                            <a href="{{ asset($comprobanteRuta) }}"
-                                                class="mt-2 inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 transition transform hover:scale-105">
-                                                Descargar Comprobante
-                                            </a>
-                                        @endif
-
-
+                                            {{-- Editar reparación --}}
+                                            @if ($rep->estado !== 'entregado')
+                                                <a href="{{ route('reparaciones.edit', $rep->id) }}"
+                                                    class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full shadow text-white bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 hover:scale-105"
+                                                    title="Editar reparación">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            @endif
+                                            {{-- Descargar comprobante --}}
+                                            @php
+                                                $comprobanteRuta = 'storage/comprobantes/comprobante_reparacion_' . $rep->id . '.pdf';
+                                            @endphp
+                                            @if (file_exists(public_path($comprobanteRuta)))
+                                                <a href="{{ asset($comprobanteRuta) }}"
+                                                    class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full shadow text-white bg-green-600 hover:bg-green-700 transition-all duration-200 hover:scale-105"
+                                                    target="_blank"
+                                                    title="Descargar comprobante">
+                                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 italic">
-                                        <div class="flex flex-col items-center justify-center py-8">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <td colspan="9" class="px-6 py-12 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-indigo-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <span class="mt-2">No se encontraron reparaciones</span>
+                                            <span class="text-lg text-gray-500 font-semibold">No se encontraron reparaciones registradas</span>
+                                            <span class="text-sm text-gray-400 mt-1">Intenta ajustar los filtros o agregar una nueva reparación.</span>
                                         </div>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+                    <style>
+                        /* Responsive: Ajustar tabla para evitar scroll horizontal */
+                        .advanced-table {
+                            table-layout: fixed;
+                            width: 100%;
+                        }
+                        .advanced-table th, .advanced-table td {
+                            white-space: normal !important;
+                            overflow-wrap: break-word;
+                            word-break: break-word;
+                            padding-left: 0.5rem;
+                            padding-right: 0.5rem;
+                        }
+                        .advanced-table th, .advanced-table td {
+                            font-size: 0.97em;
+                        }
+                        .advanced-table td {
+                            max-width: 160px;
+                        }
+                        @media (max-width: 1024px) {
+                            .advanced-table, .advanced-table thead, .advanced-table tbody, .advanced-table tr, .advanced-table th, .advanced-table td {
+                                display: block;
+                            }
+                            .advanced-table thead tr {
+                                display: none;
+                            }
+                            .advanced-table tr {
+                                margin-bottom: 1.5rem;
+                                border-radius: 1rem;
+                                box-shadow: 0 2px 8px 0 rgba(99,102,241,0.08);
+                                border: 2px solid #c7d2fe;
+                            }
+                            .advanced-table td {
+                                padding-left: 45%;
+                                position: relative;
+                                min-height: 40px;
+                                border: none !important;
+                                border-bottom: 1px solid #e0e7ff;
+                                max-width: 100vw;
+                            }
+                            .advanced-table td:before {
+                                position: absolute;
+                                left: 1rem;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                width: 44%;
+                                white-space: pre-wrap;
+                                font-weight: bold;
+                                color: #6366f1;
+                                content: attr(data-label);
+                            }
+                            .advanced-table tr:last-child td {
+                                border-bottom: none;
+                            }
+                        }
+                        .advanced-table tr {
+                            border-bottom: 4px solid #c7d2fe;
+                        }
+                        .advanced-table tr:last-child {
+                            border-bottom: none;
+                        }
+                        .advanced-table td, .advanced-table th {
+                            transition: background 0.2s, color 0.2s;
+                        }
+                        .advanced-table td {
+                            background: #fff;
+                        }
+                        .advanced-table tr.bg-indigo-50\/60 td {
+                            background: #eef2ff;
+                        }
+                        /* Responsive buttons */
+                        .advanced-table a, .advanced-table button {
+                            min-width: 32px;
+                            min-height: 32px;
+                            font-size: 1em;
+                        }
+                    </style>
                 </div>
             </div>
 

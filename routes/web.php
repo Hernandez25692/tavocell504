@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
+use Illuminate\Http\Request;
+use App\Models\Producto;
 use App\Http\Controllers\{
     DashboardController,
     ProfileController,
@@ -131,4 +133,21 @@ Route::get('/reparacion/{id}/seguimiento', [ConsultaReparacionController::class,
 // ============================
 // Rutas de autenticación (Laravel Breeze o Jetstream)
 // ============================
+Route::get('/api/productos/buscar', function (Request $request) {
+    $nombre = $request->input('nombre');
+    $productos = Producto::where('nombre', 'like', '%' . $nombre . '%')->limit(10)->get();
+
+    return response()->json($productos);
+});
+
+Route::get('/api/productos/consulta', function (Request $request) {
+    $codigo = $request->input('codigo');
+    $producto = Producto::where('codigo', $codigo)->first(); // Ajusta si el campo es diferente
+
+    if ($producto) {
+        return response()->json($producto);
+    }
+
+    return response()->json(['error' => 'Producto no encontrado'], 404);
+});
 require __DIR__ . '/auth.php';

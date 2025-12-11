@@ -190,20 +190,7 @@
                 <div
                     class="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="relative">
-                            <select id="filasPorPagina"
-                                class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 appearance-none bg-white">
-                                <option value="10" {{ request('perPage', 10) == 10 ? 'selected' : '' }}>10 filas
-                                </option>
-                                <option value="25" {{ request('perPage') == 25 ? 'selected' : '' }}>25 filas</option>
-                                <option value="50" {{ request('perPage') == 50 ? 'selected' : '' }}>50 filas</option>
-                                <option value="100" {{ request('perPage') == 100 ? 'selected' : '' }}>100 filas
-                                </option>
-                            </select>
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-list text-gray-400"></i>
-                            </div>
-                        </div>
+                        
 
                         <div class="text-sm text-gray-600 hidden sm:block">
                             <span class="font-semibold text-indigo-600">{{ $reparaciones->total() }}</span> reparaciones
@@ -212,11 +199,7 @@
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <button id="exportBtn"
-                            class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg shadow transition-all duration-300 flex items-center gap-2">
-                            <i class="fas fa-file-export"></i>
-                            Exportar
-                        </button>
+                        
 
                         <div class="relative">
                             <input type="text" id="searchTable"

@@ -320,9 +320,9 @@
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">
-                                            {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('d/m/Y') }}</div>
+                                            {{ \Carbon\Carbon::parse($rep->created_at)->format('d/m/Y') }}</div>
                                         <div class="text-xs text-gray-500">
-                                            {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('H:i') }}</div>
+                                            {{ \Carbon\Carbon::parse($rep->created_at)->format('H:i') }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         <div class="text-sm font-bold text-gray-900">L.

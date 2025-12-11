@@ -1,27 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-8 animate-fade-in">
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50/20 px-4 py-6 animate-fade-in">
         <div class="max-w-7xl mx-auto space-y-6">
-            <!-- Encabezado con efecto neumorfismo -->
+            <!-- Encabezado con diseño RMS moderno -->
             <div
-                class="flex justify-between items-center flex-wrap gap-4 p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                    <span class="bg-indigo-100 p-3 rounded-full text-indigo-600 shadow-inner">
-                        🛠️
-                    </span>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                        Reparaciones Registradas
-                    </span>
-                </h1>
+                class="flex justify-between items-center flex-wrap gap-4 p-6 bg-white rounded-2xl shadow-xl border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-tools text-white text-2xl"></i>
+                        </div>
+                        <div
+                            class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-white text-xs font-bold">{{ $reparaciones->total() }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                            Sistema de Reparaciones
+                        </h1>
+                        <p class="text-gray-500 text-sm mt-1">
+                            <i class="fas fa-chart-line text-indigo-500 mr-1"></i>
+                            Gestión profesional de reparaciones
+                        </p>
+                    </div>
+                </div>
                 <a href="{{ route('reparaciones.create') }}"
-                    class="relative overflow-hidden group bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    class="relative overflow-hidden group bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
                     <span class="relative z-10 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
+                        <i class="fas fa-plus-circle text-lg"></i>
                         Nueva Reparación
                     </span>
                     <span
@@ -29,189 +38,357 @@
                 </a>
             </div>
 
-            <!-- Filtros con diseño de vidrio -->
-            <form method="GET" action="{{ route('reparaciones.index') }}"
-                class="backdrop-blur-sm bg-white/80 rounded-xl shadow-lg p-6 border border-white/20 transition-all duration-300 hover:shadow-xl">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="relative w-full max-w-sm">
-                        <input type="text" id="buscar-cliente"
-                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm"
-                            placeholder="Buscar cliente por nombre..." autocomplete="off">
+            <!-- Filtros con diseño de vidrio y estadísticas -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Panel de filtros -->
+                <div class="lg:col-span-2">
+                    <form method="GET" action="{{ route('reparaciones.index') }}"
+                        class="backdrop-blur-sm bg-white/90 rounded-xl shadow-lg p-6 border border-white/30 transition-all duration-300 hover:shadow-xl">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                            <!-- Búsqueda de cliente con autocomplete -->
+                            <div class="relative">
+                                <div class="relative">
+                                    <input type="text" name="cliente" value="{{ request('cliente') }}"
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm bg-white"
+                                        placeholder="Buscar cliente...">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                            <!-- Código -->
+                            <div class="relative">
+                                <input type="text" name="codigo" value="{{ request('codigo') }}"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm bg-white"
+                                    placeholder="Código REP-XXX">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-barcode text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="relative">
+                                <select name="estado"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm bg-white appearance-none">
+                                    <option value="">Todos los estados</option>
+                                    <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>
+                                        Pendiente</option>
+                                    <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En
+                                        proceso</option>
+                                    <option value="listo" {{ request('estado') == 'listo' ? 'selected' : '' }}>Listo
+                                    </option>
+                                    <option value="entregado" {{ request('estado') == 'entregado' ? 'selected' : '' }}>
+                                        Entregado</option>
+                                </select>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-tasks text-gray-400"></i>
+                                </div>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Lista de sugerencias -->
-                        <ul id="sugerencias-clientes"
-                            class="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-auto hidden shadow-lg">
-                        </ul>
-                    </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <!-- Fecha desde -->
+                            <div class="relative">
+                                <input type="date" name="desde" value="{{ request('desde') }}"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm bg-white">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                                </div>
+                            </div>
 
-                    <div class="relative">
-                        <input type="text" name="codigo" value="{{ request('codigo') }}"
-                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm"
-                            placeholder="Buscar por código (REP-00045)">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                            <!-- Fecha hasta -->
+                            <div class="relative">
+                                <input type="date" name="hasta" value="{{ request('hasta') }}"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm bg-white">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-
-                    <select name="estado"
-                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-right-3 bg-center">
-                        <option value="">Todos los estados</option>
-                        <option value="recibido" {{ request('estado') == 'recibido' ? 'selected' : '' }}>Recibido
-                        </option>
-                        <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En proceso
-                        </option>
-                        <option value="listo" {{ request('estado') == 'listo' ? 'selected' : '' }}>Listo</option>
-                        <option value="entregado" {{ request('estado') == 'entregado' ? 'selected' : '' }}>Entregado
-                        </option>
-                    </select>
-                    <br>
-                    <div class="relative">
-                        <input type="date" name="desde" value="{{ request('desde') }}"
-                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-filter mr-1"></i>
+                                {{ $reparaciones->count() }} reparaciones encontradas
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="submit"
+                                    class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center gap-2">
+                                    <i class="fas fa-search"></i>
+                                    Buscar
+                                </button>
+                                <a href="{{ route('reparaciones.index') }}"
+                                    class="px-6 py-2.5 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 font-medium rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center gap-2">
+                                    <i class="fas fa-times"></i>
+                                    Limpiar
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
 
-                    <div class="relative">
-                        <input type="date" name="hasta" value="{{ request('hasta') }}"
-                            class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 shadow-sm">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                <!-- Panel de estadísticas -->
+                <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl shadow-xl p-4 text-white">
+                    <h3 class="text-lg font-bold mb-2">Resumen del Sistema</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-white/80">Pendientes</p>
+                                    <p class="text-xl font-bold">{{ $reparaciones->where('estado', 'recibido')->count() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-white/80">En Proceso</p>
+                                    <p class="text-xl font-bold">{{ $reparaciones->where('estado', 'en_proceso')->count() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-white/80">Listas para Entrega</p>
+                                    <p class="text-xl font-bold">{{ $reparaciones->where('estado', 'listo')->count() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-white/80">Entregadas</p>
+                                    <p class="text-xl font-bold">{{ $reparaciones->where('estado', 'entregado')->count() }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="flex justify-end mt-4 gap-3">
-                    <button type="submit"
-                        class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                        </svg>
-                        Aplicar filtros
-                    </button>
-                    <a href="{{ route('reparaciones.index') }}"
-                        class="px-6 py-2.5 bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 font-medium rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Limpiar
-                    </a>
-                </div>
-            </form>
-
-            <!-- Tabla con diseño moderno -->
+            <!-- Tabla dinámica con diseño RMS -->
             <div
                 class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl">
+                <!-- Controles de tabla -->
+                <div
+                    class="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <select id="filasPorPagina"
+                                class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 appearance-none bg-white">
+                                <option value="10" {{ request('perPage', 10) == 10 ? 'selected' : '' }}>10 filas
+                                </option>
+                                <option value="25" {{ request('perPage') == 25 ? 'selected' : '' }}>25 filas</option>
+                                <option value="50" {{ request('perPage') == 50 ? 'selected' : '' }}>50 filas</option>
+                                <option value="100" {{ request('perPage') == 100 ? 'selected' : '' }}>100 filas
+                                </option>
+                            </select>
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-list text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-sm text-gray-600 hidden sm:block">
+                            <span class="font-semibold text-indigo-600">{{ $reparaciones->total() }}</span> reparaciones
+                            en total
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button id="exportBtn"
+                            class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg shadow transition-all duration-300 flex items-center gap-2">
+                            <i class="fas fa-file-export"></i>
+                            Exportar
+                        </button>
+
+                        <div class="relative">
+                            <input type="text" id="searchTable"
+                                class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+                                placeholder="Buscar en tabla...">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla responsive -->
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-300 text-sm advanced-table">
-                        <thead>
-                            <tr class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider rounded-tl-2xl sticky top-0 z-10">#</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Código</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Cliente</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Dispositivo</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Falla</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Estado</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Ingreso</th>
-                                <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider sticky top-0 z-10">Monto</th>
-                                <th class="px-4 py-3 text-center font-semibold uppercase tracking-wider rounded-tr-2xl sticky top-0 z-10">Acciones</th>
+                    <table id="reparacionesTable" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer sortable"
+                                    data-column="id">
+                                    <div class="flex items-center gap-2">
+                                        ID
+                                        <i class="fas fa-sort text-gray-400 sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer sortable"
+                                    data-column="codigo">
+                                    <div class="flex items-center gap-2">
+                                        Código
+                                        <i class="fas fa-sort text-gray-400 sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Cliente</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Dispositivo</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer sortable"
+                                    data-column="estado">
+                                    <div class="flex items-center gap-2">
+                                        Estado
+                                        <i class="fas fa-sort text-gray-400 sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer sortable"
+                                    data-column="fecha_ingreso">
+                                    <div class="flex items-center gap-2">
+                                        Ingreso
+                                        <i class="fas fa-sort text-gray-400 sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer sortable"
+                                    data-column="costo_total">
+                                    <div class="flex items-center gap-2">
+                                        Monto
+                                        <i class="fas fa-sort text-gray-400 sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white">
-                            @forelse ($reparaciones->sortByDesc('fecha_ingreso') as $index => $rep)
-                                <tr class="hover:bg-indigo-50/70 transition-all duration-200 group border-b-4 border-indigo-200/40">
-                                    <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">
-                                        {{ $reparaciones->firstItem() + $index }}
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @forelse ($reparaciones as $rep)
+                                <tr class="hover:bg-indigo-50/50 transition-all duration-200 group"
+                                    data-id="{{ $rep->id }}">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $rep->id }}</div>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap font-semibold text-indigo-700">
-                                        REP-{{ str_pad($rep->id, 5, '0', STR_PAD_LEFT) }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-800 flex items-center gap-2">
-                                        <span class="inline-block w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-base">
-                                            {{ strtoupper(mb_substr($rep->cliente->nombre, 0, 1)) }}
-                                        </span>
-                                        <span>
-                                            {{ $rep->cliente->nombre }}
-                                            <br>
-                                            <span class="text-xs text-gray-400">{{ $rep->cliente->telefono ?? '' }}</span>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-indigo-100 text-indigo-800">
+                                            REP-{{ str_pad($rep->id, 5, '0', STR_PAD_LEFT) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-gray-700">
-                                        <span class="font-semibold">{{ $rep->marca }}</span> {{ $rep->modelo }}
-                                        <br>
-                                        <span class="text-xs text-gray-400">{{ $rep->serie ?? '' }}</span>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <div
+                                                    class="h-10 w-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                                                    {{ strtoupper(mb_substr($rep->cliente->nombre, 0, 1)) }}
+                                                </div>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ $rep->cliente->nombre }}
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                    {{ $rep->cliente->telefono ?? 'Sin teléfono' }}</div>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td class="px-4 py-3 max-w-xs truncate text-gray-600">
-                                        {{ \Illuminate\Support\Str::limit($rep->falla_reportada, 30) }}
+                                    <td class="px-4 py-3">
+                                        <div class="text-sm font-medium text-gray-900">{{ $rep->marca }}</div>
+                                        <div class="text-sm text-gray-500">{{ $rep->modelo }}</div>
+                                        @if ($rep->serie)
+                                            <div class="text-xs text-gray-400">{{ $rep->serie }}</div>
+                                        @endif
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         @php
-                                            $estadoClases = [
-                                                'pendiente' => 'bg-red-100 text-red-700 border border-red-300',
-                                                'en_proceso' => 'bg-yellow-100 text-yellow-800 border border-yellow-300',
-                                                'listo' => 'bg-green-100 text-green-800 border border-green-300',
-                                                'entregado' => 'bg-blue-100 text-blue-800 border border-blue-300',
+                                            $estadoConfig = [
+                                                'pendiente' => ['color' => 'red', 'icon' => 'fas fa-clock'],
+                                                'en_proceso' => ['color' => 'yellow', 'icon' => 'fas fa-cogs'],
+                                                'listo' => ['color' => 'green', 'icon' => 'fas fa-check-circle'],
+                                                'entregado' => ['color' => 'blue', 'icon' => 'fas fa-box'],
                                             ];
-                                            $estadoClase = $estadoClases[$rep->estado] ?? 'bg-gray-100 text-gray-800 border border-gray-300';
+                                            $config = $estadoConfig[$rep->estado] ?? [
+                                                'color' => 'gray',
+                                                'icon' => 'fas fa-question',
+                                            ];
                                         @endphp
-                                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold shadow-sm {{ $estadoClase }}">
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold bg-{{ $config['color'] }}-100 text-{{ $config['color'] }}-800 border border-{{ $config['color'] }}-200">
+                                            <i class="{{ $config['icon'] }} text-xs"></i>
                                             {{ ucfirst(str_replace('_', ' ', $rep->estado)) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-gray-600">
-                                        {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('d/m/Y') }}
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('d/m/Y') }}</div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ \Carbon\Carbon::parse($rep->fecha_ingreso)->format('H:i') }}</div>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap font-semibold text-gray-900">
-                                        L. {{ number_format($rep->costo_total, 2) }}
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div class="text-sm font-bold text-gray-900">L.
+                                            {{ number_format($rep->costo_total, 2) }}</div>
+                                        @if ($rep->anticipo > 0)
+                                            <div class="text-xs text-green-600">Anticipo: L.
+                                                {{ number_format($rep->anticipo, 2) }}</div>
+                                        @endif
                                     </td>
-                                    <td class="px-2 py-3 whitespace-nowrap text-center flex flex-col gap-2 items-center justify-center min-w-[110px]">
-                                        <div class="flex flex-wrap gap-2 justify-center">
-                                            {{-- Ver seguimiento --}}
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
                                             <a href="{{ route('seguimientos.index', $rep->id) }}"
-                                                class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-semibold rounded-full shadow text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all duration-200 hover:scale-105"
+                                                class="inline-flex items-center px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-all duration-200 group/tooltip relative"
                                                 title="Ver seguimiento">
-                                                <i class="fa-solid fa-eye"></i>
+                                                <i class="fas fa-eye mr-1"></i>
+                                                <span class="hidden md:inline">Ver</span>
+                                                <span
+                                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                                                    Ver seguimiento
+                                                </span>
                                             </a>
-                                            {{-- Editar reparación --}}
+
                                             @if ($rep->estado !== 'entregado')
                                                 <a href="{{ route('reparaciones.edit', $rep->id) }}"
-                                                    class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full shadow text-white bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 hover:scale-105"
+                                                    class="inline-flex items-center px-3 py-1.5 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded-lg transition-all duration-200 group/tooltip relative"
                                                     title="Editar reparación">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                    <i class="fas fa-edit mr-1"></i>
+                                                    <span class="hidden md:inline">Editar</span>
+                                                    <span
+                                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                                                        Editar reparación
+                                                    </span>
                                                 </a>
                                             @endif
-                                            {{-- Descargar comprobante --}}
+
                                             @php
-                                                $comprobanteRuta = 'storage/comprobantes/comprobante_reparacion_' . $rep->id . '.pdf';
+                                                $comprobanteRuta =
+                                                    'storage/comprobantes/comprobante_reparacion_' . $rep->id . '.pdf';
                                             @endphp
                                             @if (file_exists(public_path($comprobanteRuta)))
                                                 <a href="{{ asset($comprobanteRuta) }}"
-                                                    class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full shadow text-white bg-green-600 hover:bg-green-700 transition-all duration-200 hover:scale-105"
-                                                    target="_blank"
-                                                    title="Descargar comprobante">
-                                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                                    class="inline-flex items-center px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-all duration-200 group/tooltip relative"
+                                                    target="_blank" title="Descargar comprobante">
+                                                    <i class="fas fa-file-pdf mr-1"></i>
+                                                    <span class="hidden md:inline">PDF</span>
+                                                    <span
+                                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                                                        Descargar comprobante
+                                                    </span>
                                                 </a>
                                             @endif
                                         </div>
@@ -219,186 +396,114 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="px-6 py-12 text-center">
+                                    <td colspan="8" class="px-6 py-12 text-center">
                                         <div class="flex flex-col items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-indigo-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span class="text-lg text-gray-500 font-semibold">No se encontraron reparaciones registradas</span>
-                                            <span class="text-sm text-gray-400 mt-1">Intenta ajustar los filtros o agregar una nueva reparación.</span>
+                                            <div
+                                                class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                                <i class="fas fa-tools text-indigo-400 text-3xl"></i>
+                                            </div>
+                                            <h3 class="text-lg font-semibold text-gray-800 mb-2">No hay reparaciones
+                                                registradas</h3>
+                                            <p class="text-gray-500 mb-4">Comienza agregando una nueva reparación al
+                                                sistema.</p>
+                                            <a href="{{ route('reparaciones.create') }}"
+                                                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-300">
+                                                <i class="fas fa-plus mr-2"></i>
+                                                Crear primera reparación
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
-
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-
-                    <style>
-                        /* Responsive: Ajustar tabla para evitar scroll horizontal */
-                        .advanced-table {
-                            table-layout: fixed;
-                            width: 100%;
-                        }
-                        .advanced-table th, .advanced-table td {
-                            white-space: normal !important;
-                            overflow-wrap: break-word;
-                            word-break: break-word;
-                            padding-left: 0.5rem;
-                            padding-right: 0.5rem;
-                        }
-                        .advanced-table th, .advanced-table td {
-                            font-size: 0.97em;
-                        }
-                        .advanced-table td {
-                            max-width: 160px;
-                        }
-                        @media (max-width: 1024px) {
-                            .advanced-table, .advanced-table thead, .advanced-table tbody, .advanced-table tr, .advanced-table th, .advanced-table td {
-                                display: block;
-                            }
-                            .advanced-table thead tr {
-                                display: none;
-                            }
-                            .advanced-table tr {
-                                margin-bottom: 1.5rem;
-                                border-radius: 1rem;
-                                box-shadow: 0 2px 8px 0 rgba(99,102,241,0.08);
-                                border: 2px solid #c7d2fe;
-                            }
-                            .advanced-table td {
-                                padding-left: 45%;
-                                position: relative;
-                                min-height: 40px;
-                                border: none !important;
-                                border-bottom: 1px solid #e0e7ff;
-                                max-width: 100vw;
-                            }
-                            .advanced-table td:before {
-                                position: absolute;
-                                left: 1rem;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                width: 44%;
-                                white-space: pre-wrap;
-                                font-weight: bold;
-                                color: #6366f1;
-                                content: attr(data-label);
-                            }
-                            .advanced-table tr:last-child td {
-                                border-bottom: none;
-                            }
-                        }
-                        .advanced-table tr {
-                            border-bottom: 4px solid #c7d2fe;
-                        }
-                        .advanced-table tr:last-child {
-                            border-bottom: none;
-                        }
-                        .advanced-table td, .advanced-table th {
-                            transition: background 0.2s, color 0.2s;
-                        }
-                        .advanced-table td {
-                            background: #fff;
-                        }
-                        .advanced-table tr.bg-indigo-50\/60 td {
-                            background: #eef2ff;
-                        }
-                        /* Responsive buttons */
-                        .advanced-table a, .advanced-table button {
-                            min-width: 32px;
-                            min-height: 32px;
-                            font-size: 1em;
-                        }
-                    </style>
                 </div>
-            </div>
 
-            <!-- Paginación con diseño mejorado -->
-            <div class="flex items-center justify-between pt-4">
-                <div class="text-sm text-gray-600">
-                    Mostrando <span class="font-medium">{{ $reparaciones->firstItem() }}</span> a
-                    <span class="font-medium">{{ $reparaciones->lastItem() }}</span> de
-                    <span class="font-medium">{{ $reparaciones->total() }}</span> resultados
-                </div>
-                <div class="flex space-x-1">
-                    {{ $reparaciones->withQueryString()->onEachSide(1)->links() }}
+                <!-- Paginación personalizada -->
+                @if ($reparaciones->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div class="text-sm text-gray-600">
+                                Mostrando <span class="font-semibold">{{ $reparaciones->firstItem() }}</span> -
+                                <span class="font-semibold">{{ $reparaciones->lastItem() }}</span> de
+                                <span class="font-semibold">{{ $reparaciones->total() }}</span> resultados
+                            </div>
 
-                </div>
+                            <div class="flex items-center gap-2">
+                                <!-- Botón anterior -->
+                                @if ($reparaciones->onFirstPage())
+                                    <span
+                                        class="px-3 py-2 rounded-lg border border-gray-300 text-gray-400 cursor-not-allowed">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                @else
+                                    <a href="{{ $reparaciones->previousPageUrl() }}"
+                                        class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700 transition-colors duration-200">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                @endif
+
+                                <!-- Números de página -->
+                                <div class="flex items-center gap-1">
+                                    @foreach (range(1, min(5, $reparaciones->lastPage())) as $page)
+                                        @if ($page == $reparaciones->currentPage())
+                                            <span
+                                                class="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow">
+                                                {{ $page }}
+                                            </span>
+                                        @else
+                                            <a href="{{ $reparaciones->url($page) }}"
+                                                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700 transition-colors duration-200">
+                                                {{ $page }}
+                                            </a>
+                                        @endif
+                                    @endforeach
+
+                                    @if ($reparaciones->lastPage() > 5)
+                                        <span class="px-2 text-gray-500">...</span>
+                                        <a href="{{ $reparaciones->url($reparaciones->lastPage()) }}"
+                                            class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700 transition-colors duration-200">
+                                            {{ $reparaciones->lastPage() }}
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <!-- Botón siguiente -->
+                                @if ($reparaciones->hasMorePages())
+                                    <a href="{{ $reparaciones->nextPageUrl() }}"
+                                        class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700 transition-colors duration-200">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                @else
+                                    <span
+                                        class="px-3 py-2 rounded-lg border border-gray-300 text-gray-400 cursor-not-allowed">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="text-sm text-gray-500">
+                                Página <span class="font-semibold">{{ $reparaciones->currentPage() }}</span> de
+                                <span class="font-semibold">{{ $reparaciones->lastPage() }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-    @push('scripts')
-        <script>
-            const inputBuscar = document.getElementById('buscar-cliente');
-            const sugerencias = document.getElementById('sugerencias-clientes');
-
-            // Lista de clientes en minúscula
-            const clientes = [
-                @foreach ($clientes as $cliente)
-                    {
-                        id: {{ $cliente->id }},
-                        nombre: "{{ strtolower($cliente->nombre) }}"
-                    },
-                @endforeach
-            ];
-
-            inputBuscar.addEventListener('input', function() {
-                const texto = this.value.toLowerCase().trim();
-                sugerencias.innerHTML = '';
-
-                if (texto.length === 0) {
-                    sugerencias.classList.add('hidden');
-                    return;
-                }
-
-                const coincidencias = clientes.filter(c => c.nombre.includes(texto));
-
-                if (coincidencias.length === 0) {
-                    sugerencias.classList.add('hidden');
-                    return;
-                }
-
-                coincidencias.forEach(c => {
-                    const li = document.createElement('li');
-                    li.textContent = c.nombre.charAt(0).toUpperCase() + c.nombre.slice(1);
-                    li.className = 'px-4 py-2 hover:bg-indigo-100 cursor-pointer';
-                    li.addEventListener('click', () => {
-                        inputBuscar.value = c.nombre;
-                        sugerencias.classList.add('hidden');
-
-                        // Redirigir usando query ?cliente=nombre
-                        const url = new URL(window.location.href);
-                        url.searchParams.set('cliente', c.nombre);
-                        window.location.href = url.toString();
-                    });
-                    sugerencias.appendChild(li);
-                });
-
-                sugerencias.classList.remove('hidden');
-            });
-
-            // Ocultar si clic fuera
-            document.addEventListener('click', function(e) {
-                if (!sugerencias.contains(e.target) && e.target !== inputBuscar) {
-                    sugerencias.classList.add('hidden');
-                }
-            });
-        </script>
-    @endpush
 
     @push('styles')
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
         <style>
             .animate-fade-in {
-                animation: fadeIn 0.5s ease-out forwards;
+                animation: fadeIn 0.6s ease-out forwards;
             }
 
             @keyframes fadeIn {
                 from {
                     opacity: 0;
-                    transform: translateY(10px);
+                    transform: translateY(20px);
                 }
 
                 to {
@@ -407,25 +512,10 @@
                 }
             }
 
-            /* Estilo para selects personalizados */
-            select {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                background-repeat: no-repeat;
-                background-position: right 0.75rem center;
-                background-size: 1em;
-            }
-
-            /* Efecto hover para filas de tabla */
-            tr {
-                transition: background-color 0.2s ease, transform 0.2s ease;
-            }
-
             /* Scrollbar personalizado */
             ::-webkit-scrollbar {
-                width: 8px;
-                height: 8px;
+                width: 10px;
+                height: 10px;
             }
 
             ::-webkit-scrollbar-track {
@@ -434,61 +524,217 @@
             }
 
             ::-webkit-scrollbar-thumb {
-                background: #c7d2fe;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 border-radius: 10px;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: #a5b4fc;
+                background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
             }
 
-            /* Efecto de gradiente animado para botones */
-            .btn-gradient {
-                background-size: 200% auto;
-                transition: 0.5s;
+            /* Efectos hover para elementos interactivos */
+            .hover-lift {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
 
-            .btn-gradient:hover {
-                background-position: right center;
+            .hover-lift:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.1), 0 10px 10px -5px rgba(102, 126, 234, 0.04);
             }
 
-            /* Efecto de sombra para cards */
-            .shadow-lg {
-                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Responsive table */
+            @media (max-width: 768px) {
+                #reparacionesTable thead {
+                    display: none;
+                }
+
+                #reparacionesTable tr {
+                    display: block;
+                    margin-bottom: 1rem;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 0.75rem;
+                    padding: 1rem;
+                    background: white;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+                }
+
+                #reparacionesTable td {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0.75rem 0;
+                    border-bottom: 1px solid #f3f4f6;
+                }
+
+                #reparacionesTable td:last-child {
+                    border-bottom: none;
+                }
+
+                #reparacionesTable td::before {
+                    content: attr(data-label);
+                    font-weight: 600;
+                    color: #4f46e5;
+                    min-width: 120px;
+                }
+
+                #reparacionesTable td .flex {
+                    flex-direction: row !important;
+                    justify-content: flex-end;
+                }
             }
 
-            .shadow-xl {
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Animación para tooltips */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, 10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, 0);
+                }
+            }
+
+            /* Estilos para paginación */
+            .pagination-item {
+                transition: all 0.2s ease;
+            }
+
+            .pagination-item:hover:not(.active) {
+                background-color: #f3f4f6;
+                border-color: #d1d5db;
             }
         </style>
     @endpush
 
-    @if (session('comprobante'))
+    @push('scripts')
         <script>
-            window.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => {
-                    const modal = document.getElementById('comprobanteModal');
-                    if (modal) modal.classList.remove('hidden');
-                }, 300); // Mostrar tras 300ms
+            document.addEventListener('DOMContentLoaded', function() {
+                // Ordenamiento de columnas
+                document.querySelectorAll('.sortable').forEach(header => {
+                    header.addEventListener('click', function() {
+                        const column = this.dataset.column;
+                        const currentUrl = new URL(window.location.href);
+                        const currentSort = currentUrl.searchParams.get('sort');
+                        const currentDirection = currentUrl.searchParams.get('direction');
+
+                        let newDirection = 'asc';
+                        if (currentSort === column && currentDirection === 'asc') {
+                            newDirection = 'desc';
+                        }
+
+                        currentUrl.searchParams.set('sort', column);
+                        currentUrl.searchParams.set('direction', newDirection);
+
+                        window.location.href = currentUrl.toString();
+                    });
+                });
+
+                // Búsqueda en tabla
+                const searchTable = document.getElementById('searchTable');
+                if (searchTable) {
+                    searchTable.addEventListener('input', function() {
+                        const searchTerm = this.value.toLowerCase();
+                        const rows = document.querySelectorAll('#reparacionesTable tbody tr');
+
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
+
+                // Cambiar filas por página
+                const filasPorPagina = document.getElementById('filasPorPagina');
+                if (filasPorPagina) {
+                    filasPorPagina.addEventListener('change', function() {
+                        const currentUrl = new URL(window.location.href);
+                        currentUrl.searchParams.set('perPage', this.value);
+                        window.location.href = currentUrl.toString();
+                    });
+                }
+
+                // Exportar datos
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', function() {
+                        // Aquí iría la lógica para exportar
+                        alert('Función de exportación habilitada. Los datos se prepararán para descarga.');
+                        // En una implementación real, esto podría generar un CSV o PDF
+                    });
+                }
+
+                // Agregar labels para responsive
+                if (window.innerWidth <= 768) {
+                    const headers = document.querySelectorAll('#reparacionesTable thead th');
+                    const rows = document.querySelectorAll('#reparacionesTable tbody tr');
+
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        cells.forEach((cell, index) => {
+                            if (headers[index]) {
+                                cell.setAttribute('data-label', headers[index].textContent.trim());
+                            }
+                        });
+                    });
+                }
             });
 
-            function cerrarModal() {
-                document.getElementById('comprobanteModal').classList.add('hidden');
-            }
-        </script>
+            // Manejo del modal de comprobante
+            @if (session('comprobante'))
+                window.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        const modal = document.getElementById('comprobanteModal');
+                        if (modal) {
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                        }
+                    }, 500);
+                });
 
+                function cerrarModal() {
+                    const modal = document.getElementById('comprobanteModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                }
+            @endif
+        </script>
+    @endpush
+
+    @if (session('comprobante'))
         <div id="comprobanteModal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">✅ Reparación registrada</h2>
-                <p class="text-sm text-gray-600 mb-4">¿Deseas descargar el comprobante ahora?</p>
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+            <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check text-green-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">¡Reparación registrada!</h2>
+                            <p class="text-sm text-gray-600">La reparación se ha guardado exitosamente</p>
+                        </div>
+                    </div>
+                    <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <p class="text-gray-700 mb-6">
+                    Se ha generado el comprobante de la reparación. ¿Deseas descargarlo ahora?
+                </p>
+
                 <div class="flex justify-end gap-3">
                     <a href="{{ asset('storage/comprobantes/' . session('comprobante')) }}" target="_blank"
-                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm shadow">
-                        Descargar
+                        class="px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-download"></i>
+                        Descargar Comprobante
                     </a>
                     <button onclick="cerrarModal()"
-                        class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 text-sm shadow">
+                        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300">
                         Cerrar
                     </button>
                 </div>

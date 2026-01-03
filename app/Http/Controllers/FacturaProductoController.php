@@ -17,26 +17,82 @@ class FacturaProductoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Factura::with('cliente', 'usuario', 'detalles.producto')
+        $query = Factura::with(['cliente', 'usuario', 'detalles.producto', 'devoluciones'])
             ->whereHas('detalles', fn($q) => $q->whereNotNull('producto_id'));
 
+        /* =========================
+        FILTRO CÓDIGO / ID
+    ==========================*/
         if ($request->filled('codigo')) {
             $codigo = $request->codigo;
+
             if (Str::startsWith($codigo, 'PROD-')) {
                 $id = (int) Str::after($codigo, 'PROD-');
                 $query->where('id', $id);
             } elseif (is_numeric($codigo)) {
                 $query->where('id', $codigo);
             } else {
-                $query->where('codigo', $codigo); // Por si se usa campo 'codigo' real
+                $query->where('codigo', $codigo);
             }
         }
 
-        $facturas = $query->latest()->paginate(10);
+        /* =========================
+        FILTRO CLIENTE
+    ==========================*/
+        if ($request->filled('cliente')) {
+            $query->whereHas('cliente', function ($q) use ($request) {
+                $q->where('nombre', 'like', '%' . $request->cliente . '%');
+            });
+        }
 
-        return view('facturas_productos.index', compact('facturas'));
+        /* =========================
+        FILTRO USUARIO
+    ==========================*/
+        if ($request->filled('usuario')) {
+            $query->whereHas('usuario', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->usuario . '%');
+            });
+        }
+
+        /* =========================
+        FILTRO FECHAS
+    ==========================*/
+        if ($request->filled('desde')) {
+            $query->whereDate('created_at', '>=', $request->desde);
+        }
+
+        if ($request->filled('hasta')) {
+            $query->whereDate('created_at', '<=', $request->hasta);
+        }
+
+        /* =========================
+        FILTRO DEVOLUCIONES
+    ==========================*/
+        if ($request->filled('devolucion')) {
+            if ($request->devolucion === 'si') {
+                $query->whereHas('devoluciones');
+            } elseif ($request->devolucion === 'no') {
+                $query->whereDoesntHave('devoluciones');
+            }
+        }
+
+        /* =========================
+        TOTALES GENERALES
+    ==========================*/
+        $totalFacturas = (clone $query)->count();
+        $totalVentas   = (clone $query)->sum('total');
+
+        /* =========================
+        PAGINACIÓN
+    ==========================*/
+        $facturas = $query->latest()->paginate(10)->withQueryString();
+
+        return view('facturas_productos.index', compact(
+            'facturas',
+            'totalFacturas',
+            'totalVentas'
+        ));
     }
-
 
     public function create()
     {

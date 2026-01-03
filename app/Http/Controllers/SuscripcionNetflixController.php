@@ -7,6 +7,7 @@ use App\Models\SuscripcionNetflix;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SuscripcionNetflixController extends Controller
 {
@@ -94,13 +95,13 @@ class SuscripcionNetflixController extends Controller
 
 
 
-    public function destroy(SuscripcionNetflix $suscripcion)
+    public function destroy($id)
     {
-        $suscripcion->delete(); // ← ESTE SÍ BORRA
-        return redirect()->route('suscripciones-netflix.index')
-            ->with('success', 'Suscripción eliminada exitosamente.');
-    }
+        $deleted = DB::table('suscripciones_netflix')->where('id', $id)->delete();
 
+        return redirect()->route('suscripciones-netflix.index')
+            ->with('success', "Intento eliminar ID {$id}. Filas eliminadas: {$deleted}");
+    }
 
 
     // Para futuras notificaciones automáticas de vencimiento

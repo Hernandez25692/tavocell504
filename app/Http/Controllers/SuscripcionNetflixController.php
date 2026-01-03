@@ -30,6 +30,7 @@ class SuscripcionNetflixController extends Controller
             ->orderBy('fecha_fin', 'asc')
             ->paginate(10);
 
+
         return view('suscripciones_netflix.index', compact('suscripciones'));
     }
 
@@ -95,9 +96,12 @@ class SuscripcionNetflixController extends Controller
 
     public function destroy(SuscripcionNetflix $suscripcion)
     {
-        $suscripcion->delete();
-        return redirect()->route('suscripciones-netflix.index')->with('success', 'Suscripción eliminada exitosamente.');
+        $suscripcion->delete(); // ← ESTE SÍ BORRA
+        return redirect()->route('suscripciones-netflix.index')
+            ->with('success', 'Suscripción eliminada exitosamente.');
     }
+
+
 
     // Para futuras notificaciones automáticas de vencimiento
     public function alertas()

@@ -66,11 +66,25 @@
                                         class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded text-xs font-medium">
                                         👁️ Ver
                                     </a>
+
                                     <a href="{{ route('suscripciones-netflix.edit', $suscripcion) }}"
                                         class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-medium">
                                         ✏️ Editar
                                     </a>
+
+                                    {{-- ELIMINAR --}}
+                                    <form action="{{ route('suscripciones-netflix.destroy', $suscripcion->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar esta suscripción? Esta acción no se puede deshacer.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium">
+                                            🗑️ Eliminar
+                                        </button>
+                                    </form>
                                 </td>
+
 
 
                             </tr>

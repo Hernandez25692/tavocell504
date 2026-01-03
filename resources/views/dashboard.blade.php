@@ -21,7 +21,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-500">Ingresos del Día</p>
-                            <p class="text-2xl font-bold text-gray-800 mt-1">L. {{ number_format($ingresosTotales, 2) }}</p>
+                            <p class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">L. {{ number_format($ingresosTotales, 2) }}</p>
                         </div>
                         <div class="bg-green-100 text-green-600 p-3 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"

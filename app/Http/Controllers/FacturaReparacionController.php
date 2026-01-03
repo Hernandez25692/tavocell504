@@ -15,6 +15,9 @@ class FacturaReparacionController extends Controller
         $query = Factura::with(['cliente', 'usuario', 'detalles'])
             ->whereHas('detalles', fn($q) => $q->whereNull('producto_id'));
 
+        /* =========================
+        FILTRO POR CÓDIGO / ID
+    ==========================*/
         if ($request->filled('codigo')) {
             $codigo = $request->codigo;
 
@@ -24,14 +27,67 @@ class FacturaReparacionController extends Controller
             } elseif (is_numeric($codigo)) {
                 $query->where('id', $codigo);
             } else {
-                $query->where('codigo', $codigo); 
+                $query->where('codigo', $codigo);
             }
         }
 
-        $facturas = $query->latest()->paginate(10);
-        $reparaciones = Reparacion::whereIn('factura_id', $facturas->pluck('id'))->get()->keyBy('factura_id');
+        /* =========================
+        FILTRO POR CLIENTE
+    ==========================*/
+        if ($request->filled('cliente')) {
+            $query->whereHas('cliente', function ($q) use ($request) {
+                $q->where('nombre', 'like', '%' . $request->cliente . '%');
+            });
+        }
 
-        return view('facturas_reparaciones.index', compact('facturas', 'reparaciones'));
+        /* =========================
+        FILTRO POR USUARIO
+    ==========================*/
+        if ($request->filled('usuario')) {
+            $query->whereHas('usuario', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->usuario . '%');
+            });
+        }
+
+        /* =========================
+        FILTRO POR FECHAS
+    ==========================*/
+        if ($request->filled('desde')) {
+            $query->whereDate('created_at', '>=', $request->desde);
+        }
+
+        if ($request->filled('hasta')) {
+            $query->whereDate('created_at', '<=', $request->hasta);
+        }
+
+        /* =========================
+        PAGINACIÓN
+    ==========================*/
+        $facturas = $query->latest()->paginate(10)->withQueryString();
+
+        /* =========================
+        REPARACIONES ASOCIADAS
+    ==========================*/
+        $reparaciones = Reparacion::whereIn('factura_id', $facturas->pluck('id'))
+            ->get()
+            ->keyBy('factura_id');
+
+        /* =========================
+        TOTALES GENERALES
+    ==========================*/
+        $totalFacturas = $query->count();
+
+        $totalMonto = Reparacion::whereIn(
+            'factura_id',
+            $query->pluck('id')
+        )->sum('costo_total');
+
+        return view('facturas_reparaciones.index', compact(
+            'facturas',
+            'reparaciones',
+            'totalFacturas',
+            'totalMonto'
+        ));
     }
 
     public function show(Factura $factura)
